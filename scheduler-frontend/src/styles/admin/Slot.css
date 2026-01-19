@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+.slot-page {
+  @apply min-h-screen bg-slate-50;
+}
+
+.slot-container {
+  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.slot-header {
+  @apply mb-8;
+}
+
+.slot-title {
+  @apply text-4xl font-bold text-slate-900 mb-2;
+}
+
+.slot-subtitle {
+  @apply text-slate-500;
+}
+
+/* Creation Card */
+.create-slot-card {
+  @apply bg-white border border-slate-200 rounded-xl shadow-sm p-6 mb-8;
+}
+
+.card-heading {
+  @apply text-lg font-semibold text-slate-800 mb-6;
+}
+
+.slot-form-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-6 mb-6;
+}
+
+.input-group {
+  @apply space-y-2;
+}
+
+.input-label {
+  @apply block text-sm font-medium text-slate-700;
+}
+
+.slot-input {
+  @apply w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-900 
+         focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all;
+}
+
+.btn-create-slot {
+  @apply flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-2.5 
+         rounded-lg font-medium hover:bg-slate-800 active:scale-[0.98] 
+         disabled:opacity-50 transition-all shadow-sm;
+}
+
+/* Slots Table Section */
+.slots-list-card {
+  @apply bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden;
+}
+
+.table-wrapper {
+  @apply overflow-x-auto;
+}
+
+.slots-table {
+  @apply w-full text-left border-collapse;
+}
+
+.slots-thead {
+  @apply bg-slate-50 border-b border-slate-100;
+}
+
+.slots-th {
+  @apply px-6 py-3 text-sm font-semibold text-slate-700;
+}
+
+.slots-tr {
+  @apply border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors;
+}
+
+.slots-tr-booked {
+  @apply bg-slate-50/80 grayscale-[0.2];
+}
+
+/* Status Badges */
+.status-badge {
+  @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+}
+
+.badge-available {
+  @apply bg-green-100 text-green-700 border border-green-200;
+}
+
+.badge-booked {
+  @apply bg-rose-100 text-rose-700 border border-rose-200;
+}
+
+.btn-delete-slot {
+  @apply text-slate-400 hover:text-rose-600 transition-colors p-2 rounded-lg hover:bg-rose-50;
+}

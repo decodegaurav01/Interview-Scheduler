@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+.login-page-wrapper {
+  @apply min-h-screen flex items-center justify-center p-6 bg-gradient-to-tr from-blue-50 via-slate-50 to-slate-100;
+}
+
+.login-card-container {
+  @apply w-full max-w-md;
+}
+
+.login-card {
+  @apply bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/50 p-8 md:p-10;
+}
+
+/* Header Section */
+.login-header {
+  @apply mb-10 text-center;
+}
+
+.login-icon-box {
+  @apply inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600 mb-4;
+}
+
+.login-title {
+  @apply text-2xl font-bold tracking-tight text-slate-900;
+}
+
+.login-subtitle {
+  @apply text-slate-500 mt-2;
+}
+
+/* Error Message */
+
+@theme {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; } 
+  }
+
+  @keyframes slide-in-top {
+    from { transform: translateY(-0.25rem); }
+    to { transform: translateY(0); }
+  }
+
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-in-top: slide-in-top 0.3s ease-out;
+}
+
+.animate-login-entry {
+  @apply animate-fade-in animate-slide-in-top;
+}
+.login-error-alert {
+  @apply flex items-center gap-3 bg-red-50 border border-red-100 rounded-xl p-4 mb-6 ;
+}
+
+/* Form Styles */
+.login-form {
+  @apply space-y-5;
+}
+
+.form-group {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply text-sm font-semibold text-slate-700 ml-1;
+}
+
+.input-wrapper {
+  @apply relative;
+}
+
+.input-icon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400;
+}
+
+.form-input {
+  @apply w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 
+         placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 
+         focus:border-blue-500 transition-all;
+}
+
+/* Submit Button */
+.btn-submit {
+  @apply w-full bg-slate-900 text-white py-3 rounded-xl font-semibold 
+         hover:bg-slate-800 active:scale-[0.98] disabled:opacity-50 
+         disabled:pointer-events-none transition-all shadow-lg shadow-slate-200;
+}
+
+.spinner {
+  @apply w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin;
+}
+
+/* Footer Section */
+.login-footer {
+  @apply text-center text-sm text-slate-500 mt-8;
+}
+
+.login-link {
+  @apply font-semibold text-blue-600 hover:underline;
+}
