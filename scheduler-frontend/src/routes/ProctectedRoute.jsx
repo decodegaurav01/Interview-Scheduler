@@ -2,8 +2,8 @@
 import React from "react"
 
 
-import { useEffect} from 'react';
-import {useNavigate} from 'react-router-dom'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 
 export function ProtectedRoute({ children, requiredRole }) {
@@ -15,7 +15,7 @@ export function ProtectedRoute({ children, requiredRole }) {
     const role = localStorage.getItem('role');
 
     if (!token) {
-      navigate('/login');
+      navigate('/admin-login');
       return;
     }
 
@@ -24,7 +24,7 @@ export function ProtectedRoute({ children, requiredRole }) {
       return;
     }
 
- 
+
   }, [navigate, requiredRole]);
 
 

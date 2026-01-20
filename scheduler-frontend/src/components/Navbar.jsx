@@ -15,7 +15,7 @@ export function Navbar({ role }) {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('email');
-    navigate('/login');
+    navigate('/admin-login');
   };
 
   const adminLinks = [

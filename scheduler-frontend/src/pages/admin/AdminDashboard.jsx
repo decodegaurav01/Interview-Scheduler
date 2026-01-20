@@ -9,13 +9,13 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const fetchBookings = async () => {
+  useEffect(() => {
+    const fetchBookings = async () => {
       
-  //   };
+    };
 
-  //   fetchBookings();
-  // }, []);
+    fetchBookings();
+  }, []);
 
   return (
     
