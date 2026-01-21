@@ -112,3 +112,19 @@
   @apply px-5 py-2 rounded-xl bg-rose-600 text-white font-semibold
          hover:bg-rose-700 shadow-lg shadow-rose-200 active:scale-95 transition-all duration-200;
 }
+
+
+.alert-error, .alert-success {
+  animation: slideInAndFade 0.5s ease-out;
+}
+
+@keyframes slideInAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

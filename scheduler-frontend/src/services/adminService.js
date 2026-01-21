@@ -68,3 +68,78 @@ export async function deleteWhitelistedEmail(id) {
         throw e;
     }
 }
+
+
+//----------------Admin Slot Services----------------//
+
+// Get All Slots
+export async function getAllSlots() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      `${config.serverUrl}/admin/available-slots`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error("Error fetching slots:", error);
+    throw error;
+  }
+}
+
+
+// Create Slot
+
+export async function createSlot(slotData) {
+  try {
+    const token = localStorage.getItem("token");
+
+    console.log(slotData)
+
+    const response = await axios.post(
+      `${config.serverUrl}/admin/create-slot`,
+      slotData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error("Error creating slot:", error);
+    throw error;
+  }
+}
+
+// Delete Slot
+
+export async function deleteSlot(slotId) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.delete(
+      `${config.serverUrl}/admin/delete-slot/${slotId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error("Error deleting slot:", error);
+    throw error;
+  }
+}

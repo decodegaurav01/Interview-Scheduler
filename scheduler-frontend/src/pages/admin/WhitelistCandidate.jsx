@@ -19,9 +19,6 @@ export default function WhitelistCandidate() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   
 
-  useEffect(() => {
-    fetchEmails();
-  }, []);
 
   const fetchEmails = async () => {
     try {
@@ -35,6 +32,8 @@ export default function WhitelistCandidate() {
       setIsLoading(false);
     }
   };
+
+  
 
   const handleAddEmail = async (e) => {
     e.preventDefault();
@@ -84,27 +83,34 @@ export default function WhitelistCandidate() {
   };
 
   const handleDeleteEmail = async () => {
+  try {
+    const response = await deleteWhitelistedEmail(selectedUserId);
+    
+    setSuccess("Email removed successfully"); 
+    setEmails((prev) => prev.filter((e) => e.id !== selectedUserId));
+  } catch (err) {
+   
+    setError("Could not delete email"); 
+  } finally {
+    setShowDeleteModal(false);
+    setSelectedUserId(null);
+  }
+};
 
-    try {
-      const response = await deleteWhitelistedEmail(selectedUserId);
+   useEffect(() => {
+    fetchEmails();
+  }, []);
 
-    const deletedEmail = emails.find(
-      (e) => e.id === selectedUserId
-    )?.email;
+useEffect(() => {
+  if (error || success) {
+    const timer = setTimeout(() => {
+      setError('');
+      setSuccess('');
+    }, 5000);
 
-    setSuccess(`${deletedEmail} has been removed`);
-      setEmails((prev) => prev.filter((e) => e.id !== selectedUserId));
-
-
-    } catch (err) {
-      setError(err?.response?.data?.message || "Failed to delete email");
-    } finally {
-      setShowDeleteModal(false);
-      setSelectedUserId(null);
-    }
-  };
-
-
+    return () => clearTimeout(timer); 
+  }
+}, [error, success]);
 
   return (
     <>
@@ -166,7 +172,7 @@ export default function WhitelistCandidate() {
                       <div>
                         <p className="text-slate-900 font-medium">{item.email}</p>
                         <p className="text-xs text-slate-500 uppercase tracking-wider">
-                          Added {new Date(item.addedAt).toLocaleDateString()}
+                        {/* Added {new Date(item.addedAt).toLocaleDateString()} */}
                         </p>
                       </div>
                     </div>
