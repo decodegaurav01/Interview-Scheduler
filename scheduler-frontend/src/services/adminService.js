@@ -143,3 +143,27 @@ export async function deleteSlot(slotId) {
     throw error;
   }
 }
+
+
+// Admin Dashboard
+
+export async function getAllInterviewBookings() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      `${config.serverUrl}/admin/interview-bookings`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data; 
+
+  } catch (error) {
+    console.error("Error fetching interview bookings:", error);
+    throw error;
+  }
+}

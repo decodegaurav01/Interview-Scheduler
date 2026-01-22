@@ -2,6 +2,7 @@ import { Navbar } from '../../components/Navbar'
 import { useEffect, useState } from 'react';
 import { Calendar, User, Clock } from 'lucide-react';
 import '../../styles/admin/AdminDashboard.css'
+import { getAllInterviewBookings } from '../../services/adminService';
 
 
 
@@ -11,7 +12,9 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      
+      const response = await getAllInterviewBookings();
+    setBookings(response);
+    setIsLoading(false)
     };
 
     fetchBookings();
@@ -58,23 +61,23 @@ export default function AdminDashboard() {
                       <td className="table-td">
                         <div className="cell-content">
                           <User className="w-4 h-4 text-slate-400" />
-                          {booking.candidateEmail}
+                          {booking.candidate_email}
                         </div>
                       </td>
                       <td className="table-td">
                         <div className="cell-content">
                           <Calendar className="w-4 h-4 text-slate-400" />
-                          {new Date(booking.slotDate).toLocaleDateString()}
+                          {new Date(booking.slot_date).toLocaleDateString()}
                         </div>
                       </td>
                       <td className="table-td">
                         <div className="cell-content">
                           <Clock className="w-4 h-4 text-slate-400" />
-                          {booking.slotStartTime} - {booking.slotEndTime}
+                          {booking.start_time} - {booking.end_time}
                         </div>
                       </td>
                       <td className="table-td text-slate-400">
-                        {new Date(booking.bookedAt).toLocaleDateString()}
+                        {new Date(booking.booked_at).toLocaleDateString()}
                       </td>
                     </tr>
                   ))}
@@ -93,13 +96,13 @@ export default function AdminDashboard() {
           <div className="stat-card">
             <h3 className="stat-label">Unique Candidates</h3>
             <p className="stat-value">
-              {new Set(bookings.map((b) => b.candidateEmail)).size}
+              {new Set(bookings.map((b) => b.candidate_email)).size}
             </p>
           </div>
           <div className="stat-card">
             <h3 className="stat-label">Upcoming Interviews</h3>
             <p className="stat-value">
-              {bookings.filter((b) => new Date(b.slotDate) > new Date()).length}
+              {bookings.filter((b) => new Date(b.slot_date) > new Date()).length}
             </p>
           </div>
         </div>

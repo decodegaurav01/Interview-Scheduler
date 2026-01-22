@@ -6,6 +6,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import WhitelistCandidate from "../pages/admin/whitelistCandidate";
 import Slot from "../pages/admin/Slots";
 import CandidateDashboard from "../pages/candidate/CandidateDashboard";
+import CandidateLogin from "../pages/auth/CandidateLogin";
 
 
 
@@ -37,7 +38,9 @@ export default function AppRoutes() {
                 } />
 
                 {/* Candidate */}
-                <Route path="/candidateDashboard" element={
+                <Route path="/candidate-login" element={<CandidateLogin />} />
+
+                <Route path="/candidate-dashboard" element={
 
                     <CandidateDashboard />
 

@@ -20,7 +20,14 @@ function authMiddleware(req, res, next) {
 
     const payload = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.adminId = payload.adminId;
+      if (payload.role === "ADMIN") {
+      req.adminId = payload.adminId;
+    }
+
+    if (payload.role === "CANDIDATE") {
+      req.whitelistedEmailId = payload.whitelistedEmailId;
+      req.candidateEmail = payload.email;
+    }
     next();
   } catch (err) {
     res.send("Invalid or expired token");

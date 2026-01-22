@@ -20,12 +20,12 @@ export function Navbar({ role }) {
 
   const adminLinks = [
     { href: '/admin/dashboard', label: 'Dashboard' },
-    { href: '/admin/whitelist-candidate', label: 'whitelist Cadidate' },
+    { href: '/admin/whitelist-candidate', label: 'Whitelist Cadidate' },
     { href: '/admin/slots', label: 'Manage Slots' },
   ];
 
   const candidateLinks = [
-    { href: '/candidate/slots', label: 'Available Slots' },
+  
   ];
 
   const links = role === 'admin' ? adminLinks : candidateLinks;

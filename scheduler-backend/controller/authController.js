@@ -27,7 +27,8 @@ exports.adminLogin = (req, res) => {
 
         const token = jwt.sign(
             {
-                adminId: admin.id
+                adminId: admin.id,
+                role:"ADMIN"
             },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
@@ -37,8 +38,57 @@ exports.adminLogin = (req, res) => {
             token,
             name: admin.full_name,
             email: admin.email,
+            role:"ADMIN"
         };
 
         res.send(body);
     });
+};
+
+
+// Candidate Login
+
+exports.candidateLogin = (req, res) => {
+  const { email } = req.body;
+
+  
+  const sql = `
+    SELECT id, email
+    FROM whitelisted_email
+    WHERE email = ?
+  `;
+
+  pool.query(sql, [email], (error, rows) => {
+    if (error) {
+      return res.send(error)
+    }
+
+    if (rows.length === 0) {
+      return res.status(403).json({
+        message: "Email not authorized",
+      });
+    }
+
+    const whitelistedEmail = rows[0];
+
+   
+    const token = jwt.sign(
+      {
+        whitelistedEmailId: whitelistedEmail.id,
+        email: whitelistedEmail.email,
+        role: "CANDIDATE",
+        
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    const body = {
+            token,
+            email:whitelistedEmail.email,
+            role: "CANDIDATE",
+        };
+
+    return res.send(body)
+  });
 };

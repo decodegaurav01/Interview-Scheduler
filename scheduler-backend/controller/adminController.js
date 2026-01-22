@@ -1,5 +1,36 @@
 const pool = require("../config/db");
 
+
+//---- Dashboard ---------
+exports.getAllInterviewBookings = (req, res) => {
+  const sql = `
+    SELECT
+      ib.id AS booking_id,
+      we.email AS candidate_email,
+      islots.slot_date,
+      islots.start_time,
+      islots.end_time,
+      ib.booked_at
+    FROM interview_bookings ib
+    JOIN whitelisted_email we
+      ON ib.whitelisted_email_id = we.id
+    JOIN interview_slots islots
+      ON ib.slot_id = islots.id
+    ORDER BY ib.booked_at DESC
+  `;
+
+  pool.query(sql, (error, data) => {
+    if (error) {
+      console.error("Error fetching interview bookings:", error);
+      return res.send(error);
+    }
+
+    return res.send(data)
+  });
+};
+
+//---- Whitelisted Email-------
+
 exports.addWhitelistEmail = (req, res) => {
     const { email } = req.body;
 
@@ -43,7 +74,7 @@ exports.deleteWhitelistedEmail = (req, res) => {
 
 };
 
-
+//----- Slot ------
 exports.getAllSlots = (req, res) => {
 
    const sql = `

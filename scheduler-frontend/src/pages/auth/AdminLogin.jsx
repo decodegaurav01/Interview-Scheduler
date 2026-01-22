@@ -19,7 +19,7 @@ export default function AdminLogin() {
         e.preventDefault();
         setError('');
         setIsLoading(true);
-
+ 
         try {
 
             if (email.length === 0)
@@ -113,7 +113,7 @@ export default function AdminLogin() {
                     <div className="admin-login-footer">
                         <p className="text-sm text-muted-foreground">
                             Are you a candidate?{' '}
-                            <Link href="/candidate-login" className="cadidate-login-link">
+                            <Link to="/candidate-login" className="cadidate-login-link">
                                 Candidate Login
                             </Link>
                         </p>
