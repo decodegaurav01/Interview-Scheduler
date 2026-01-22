@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 
-import Login from "../pages/auth/Login";
+import AdminLogin from "../pages/auth/AdminLogin";
 import { ProtectedRoute } from "./ProctectedRoute";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import WhitelistCandidate from "../pages/admin/whitelistCandidate";
 import Slot from "../pages/admin/Slots";
 import CandidateDashboard from "../pages/candidate/CandidateDashboard";
+import CandidateLogin from "../pages/auth/CandidateLogin";
 
 
 
@@ -16,8 +17,8 @@ export default function AppRoutes() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<AdminLogin />} />
+                <Route path="/admin-login" element={<AdminLogin />} />
 
                 {/* Admin */}
                 <Route path="/admin/dashboard" element={
@@ -32,14 +33,16 @@ export default function AppRoutes() {
                 } />
                 <Route path="/admin/slots" element={
 
-                    <Slot/>
+                    <Slot />
 
                 } />
 
                 {/* Candidate */}
-                <Route path="/candidateDashboard" element={
+                <Route path="/candidate-login" element={<CandidateLogin />} />
 
-                    <CandidateDashboard/>
+                <Route path="/candidate-dashboard" element={
+
+                    <CandidateDashboard />
 
                 } />
             </Routes>

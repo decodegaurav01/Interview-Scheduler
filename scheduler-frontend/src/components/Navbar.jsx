@@ -15,17 +15,17 @@ export function Navbar({ role }) {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('email');
-    navigate('/login');
+    navigate('/admin-login');
   };
 
   const adminLinks = [
     { href: '/admin/dashboard', label: 'Dashboard' },
-    { href: '/admin/whitelist-candidate', label: 'whitelist Cadidate' },
+    { href: '/admin/whitelist-candidate', label: 'Whitelist Cadidate' },
     { href: '/admin/slots', label: 'Manage Slots' },
   ];
 
   const candidateLinks = [
-    { href: '/candidate/slots', label: 'Available Slots' },
+  
   ];
 
   const links = role === 'admin' ? adminLinks : candidateLinks;

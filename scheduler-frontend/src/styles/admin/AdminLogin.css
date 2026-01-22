@@ -1,31 +1,31 @@
 @import 'tailwindcss';
 
-.login-page-wrapper {
+.admin-login-page-wrapper {
   @apply min-h-screen flex items-center justify-center p-6 bg-gradient-to-tr from-blue-50 via-slate-50 to-slate-100;
 }
 
-.login-card-container {
+.admin-login-card-container {
   @apply w-full max-w-md;
 }
 
-.login-card {
+.admin-login-card {
   @apply bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/50 p-8 md:p-10;
 }
 
 /* Header Section */
-.login-header {
+.admin-login-header {
   @apply mb-10 text-center;
 }
 
-.login-icon-box {
+.admin-login-icon-box {
   @apply inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600 mb-4;
 }
 
-.login-title {
+.admin-login-title {
   @apply text-2xl font-bold tracking-tight text-slate-900;
 }
 
-.login-subtitle {
+.admin-login-subtitle {
   @apply text-slate-500 mt-2;
 }
 
@@ -46,15 +46,15 @@
   --animate-slide-in-top: slide-in-top 0.3s ease-out;
 }
 
-.animate-login-entry {
+.animate-admin-login-entry {
   @apply animate-fade-in animate-slide-in-top;
 }
-.login-error-alert {
+.admin-login-error-alert {
   @apply flex items-center gap-3 bg-red-50 border border-red-100 rounded-xl p-4 mb-6 ;
 }
 
 /* Form Styles */
-.login-form {
+.admin-login-form {
   @apply space-y-5;
 }
 
@@ -92,10 +92,10 @@
 }
 
 /* Footer Section */
-.login-footer {
+.admin-login-footer {
   @apply text-center text-sm text-slate-500 mt-8;
 }
 
-.login-link {
+.cadidate-login-link {
   @apply font-semibold text-blue-600 hover:underline;
 }

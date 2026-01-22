@@ -2,12 +2,16 @@
 import React from "react"
 import { useState } from 'react';
 import { AlertCircle, Lock, Mail } from 'lucide-react';
-import '../../styles/Login.css'
+import '../../styles/admin/AdminLogin.css'
+import { Link, useNavigate } from "react-router-dom";
+import { adminLogin } from "../../services/authService";
 
-export default function Login() {
+export default function AdminLogin() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -15,21 +19,30 @@ export default function Login() {
         e.preventDefault();
         setError('');
         setIsLoading(true);
-
+ 
         try {
 
+            if (email.length === 0)
+                setError("Please enter email");
+            else if (password.length === 0)
+                setError("Please enter password")
+            else {
 
-            // Store token and role
-            //   localStorage.setItem('token', data.token);
-            //   localStorage.setItem('role', data.role);
-            //   localStorage.setItem('email', data.email);
+                const res = await adminLogin(email, password);
 
-            // Redirect based on role
-            //   if (data.role === 'admin') {
-            //     navigate('/admin/dashboard');
-            //   } else {
-            //     navigate('/candidate/slots');
-            //   }
+                console.log(res)
+
+                if (res) {
+
+                    localStorage.setItem('token', res.token);
+                    localStorage.setItem('email', res.email);
+
+                    navigate('/admin/dashboard')
+
+                }
+            }
+
+
         } catch (err) {
             setError(err ? err.message : 'An error occurred');
         } finally {
@@ -38,25 +51,25 @@ export default function Login() {
     };
 
     return (
-        <div className="login-page-wrapper">
-            <div className="login-card-container">
-                <div className="login-card">
-                    <div className="login-header">
-                        <div className="login-icon-box">
+        <div className="admin-login-page-wrapper">
+            <div className="admin-login-card-container">
+                <div className="admin-login-card">
+                    <div className="admin-login-header">
+                        <div className="admin-login-icon-box">
                             <Lock className="w-6 h-6" />
                         </div>
-                        <h1 className="login-title">Interview Scheduler</h1>
-                        <p className="login-subtitle">Welcome back! Please enter your details.</p>
+                        <h1 className="admin-login-title">Interview Scheduler</h1>
+                        <p className="admin-login-subtitle">Welcome back! Please enter your details.</p>
                     </div>
 
                     {error && (
-                        <div className="login-error-alert animate-login-entry">
+                        <div className="admin-login-error-alert animate-login-entry">
                             <AlertCircle className="w-5 h-5 text-red-600" />
                             <p className="text-sm font-medium text-red-800">{error}</p>
                         </div>
                     )}
 
-                    <form onSubmit={handleLogin} className="login-form">
+                    <form onSubmit={handleLogin} className="admin-login-form">
                         <div className="form-group">
                             <label className="form-label">Email Address</label>
                             <div className="input-wrapper">
@@ -97,9 +110,14 @@ export default function Login() {
                         </button>
                     </form>
 
-                    <p className="login-footer">
-                        Don't have an account? <a href="#" className="login-link">Request access</a>
-                    </p>
+                    <div className="admin-login-footer">
+                        <p className="text-sm text-muted-foreground">
+                            Are you a candidate?{' '}
+                            <Link to="/candidate-login" className="cadidate-login-link">
+                                Candidate Login
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
