@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import "../../styles/candidate/CandidateLogin.css"
 import { candidateLogin } from '../../services/authService';
+import StatusAlert from '../../components/StatusAlert';
 
 
 export default function CandidateLogin() {
@@ -22,9 +22,8 @@ export default function CandidateLogin() {
         try {
             const res = await candidateLogin(email);
 
-            console.log(res)
-            localStorage.setItem('candidateToken', res.token);
-            localStorage.setItem('candidateEmail', res.email);
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('role', res.role);
 
             setSuccess('Verification successful! Redirecting...');
             setIsVerificationSent(true);
@@ -34,7 +33,8 @@ export default function CandidateLogin() {
                 navigate('/candidate-dashboard');
             }, 1500);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
+            console.log(err)
+            setError("This email is not on the whitelist");
         } finally {
             setIsLoading(false);
         }
@@ -49,19 +49,11 @@ export default function CandidateLogin() {
                         <p className="candidateLogin-subtitle">Candidate Login</p>
                     </header>
 
-                    {error && (
-                        <div className="candidateLogin-alert candidateLogin-alert-destructive candidateLogin-animate-alert">
-                            <AlertCircle className="w-5 h-5 shrink-0" />
-                            <p>{error}</p>
-                        </div>
-                    )}
-
-                    {success && (
-                        <div className="candidateLogin-alert candidateLogin-alert-success candidateLogin-animate-alert">
-                            <CheckCircle className="w-5 h-5 shrink-0" />
-                            <p>{success}</p>
-                        </div>
-                    )}
+                    <StatusAlert
+                        error={error}
+                        success={success}
+                        reset={() => { setError(''); setSuccess(''); }}
+                    />
 
                     <div className="candidateLogin-form">
                         <div>
@@ -70,7 +62,7 @@ export default function CandidateLogin() {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleVerifyEmail()} 
+                                onKeyDown={(e) => e.key === 'Enter' && handleVerifyEmail()}
                                 placeholder="candidate@example.com"
                                 className="candidateLogin-input"
                                 required
@@ -79,7 +71,7 @@ export default function CandidateLogin() {
                         </div>
 
                         <button
-                            type="button" 
+                            type="button"
                             onClick={handleVerifyEmail}
                             disabled={isLoading || isVerificationSent}
                             className="btn-candidateLogin-submit"

@@ -4,6 +4,7 @@ import { Navbar } from '../../components/Navbar'
 import { Trash2, Plus, Mail } from 'lucide-react';
 import '../../styles/admin/WhitelistCandidate.css'
 import { addWhitelistEmail, deleteWhitelistedEmail, getWhitelistedEmails } from "../../services/adminService";
+import StatusAlert from "../../components/StatusAlert";
 
 
 
@@ -17,7 +18,7 @@ export default function WhitelistCandidate() {
   const [success, setSuccess] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  
+
 
 
   const fetchEmails = async () => {
@@ -33,7 +34,7 @@ export default function WhitelistCandidate() {
     }
   };
 
-  
+
 
   const handleAddEmail = async (e) => {
     e.preventDefault();
@@ -83,34 +84,23 @@ export default function WhitelistCandidate() {
   };
 
   const handleDeleteEmail = async () => {
-  try {
-    const response = await deleteWhitelistedEmail(selectedUserId);
-    
-    setSuccess("Email removed successfully"); 
-    setEmails((prev) => prev.filter((e) => e.id !== selectedUserId));
-  } catch (err) {
-   
-    setError("Could not delete email"); 
-  } finally {
-    setShowDeleteModal(false);
-    setSelectedUserId(null);
-  }
-};
+    try {
+      const response = await deleteWhitelistedEmail(selectedUserId);
 
-   useEffect(() => {
+      setSuccess("Email removed successfully");
+      setEmails((prev) => prev.filter((e) => e.id !== selectedUserId));
+    } catch (err) {
+
+      setError("Could not delete email");
+    } finally {
+      setShowDeleteModal(false);
+      setSelectedUserId(null);
+    }
+  };
+
+  useEffect(() => {
     fetchEmails();
   }, []);
-
-useEffect(() => {
-  if (error || success) {
-    const timer = setTimeout(() => {
-      setError('');
-      setSuccess('');
-    }, 5000);
-
-    return () => clearTimeout(timer); 
-  }
-}, [error, success]);
 
   return (
     <>
@@ -127,8 +117,11 @@ useEffect(() => {
           <div className="whitelist-card">
             <h2 className="card-heading">Add New Email</h2>
 
-            {error && <div className="alert-error">{error}</div>}
-            {success && <div className="alert-success">{success}</div>}
+            <StatusAlert
+              error={error}
+              success={success}
+              reset={() => { setError(''); setSuccess(''); }}
+            />
 
             <form onSubmit={handleAddEmail} className="whitelist-form">
               <input
@@ -172,7 +165,7 @@ useEffect(() => {
                       <div>
                         <p className="text-slate-900 font-medium">{item.email}</p>
                         <p className="text-xs text-slate-500 uppercase tracking-wider">
-                        {/* Added {new Date(item.addedAt).toLocaleDateString()} */}
+                          {/* Added {new Date(item.addedAt).toLocaleDateString()} */}
                         </p>
                       </div>
                     </div>

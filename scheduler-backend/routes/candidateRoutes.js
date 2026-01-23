@@ -5,7 +5,7 @@ const candidateController = require("../controller/candidateController")
 const authMiddleware = require("../middleware/authMiddleware")
 
 
-router.get("/available-slots",authMiddleware,candidateController.getAvailableSlots);
 router.post("/slot-booking",authMiddleware,candidateController.bookSlot);
+router.get("/dashboard",authMiddleware,candidateController.getCandidateDashboard);
 
 module.exports = router;

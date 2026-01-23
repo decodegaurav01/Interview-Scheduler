@@ -7,6 +7,8 @@ const authMiddleware = require("../middleware/authMiddleware")
 
 //-----Admin dashboard Routes--------//
 router.get("/interview-bookings",authMiddleware,adminController.getAllInterviewBookings)
+router.delete("/bookings/:bookingId",authMiddleware,adminController.cancelBooking);
+
 
 // ------Whitelist Email Routes-------// 
 router.get("/whitelisted-email",authMiddleware,adminController.getWhitelistedEmails)
@@ -18,6 +20,8 @@ router.delete("/delete-whitelisted-email/:id",authMiddleware,adminController.del
 router.get("/available-slots",authMiddleware,adminController.getAllSlots)
 router.post("/create-slot",authMiddleware,adminController.createSlot)
 router.delete("/delete-slot/:id",authMiddleware,adminController.deleteSlot)
+router.patch("/slots/:id/status",authMiddleware,adminController.updateSlotStatus);
+
 
 
 

@@ -1,94 +1,72 @@
 
 import { useEffect, useState } from 'react';
-import { Calendar, Clock, Check, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Check, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
 import '../../styles/candidate/candidateDashboard.css'
-import { bookSlot, getAvailableSlots } from '../../services/candidateService';
+import { bookSlot, getCandidateDashboard } from '../../services/candidateService';
+import StatusAlert from '../../components/StatusAlert';
 
 
 
 export default function CandidateDashboard() {
+  const [hasBooked, setHasBooked] = useState(false);
+  const [booking, setBooking] = useState(null);
   const [slots, setSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isBooking, setIsBooking] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [hasBooked, setHasBooked] = useState(false);
-  const [candidateEmail, setCandidateEmail] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
 
   useEffect(() => {
-    const email = localStorage.getItem('email');
-    setCandidateEmail(email || '');
-    fetchSlots();
+    loadDashboard();
   }, []);
 
-
-  const fetchSlots = async () => {
+  const loadDashboard = async () => {
     try {
-      const response = await getAvailableSlots();
-      console.log(response)
-      if (response) {
-        setSlots(response);
+      const data = await getCandidateDashboard();
+      if (data.hasBooked) {
+        setHasBooked(true);
+        setBooking(data.booking);
+      } else if (data.availableSlots.length === 0) {
+        setError("The slots are not available at this time.")
       } else {
-        setSlots([]);
+        setHasBooked(false);
+        setSlots(data.availableSlots);
       }
-    } catch (error) {
-      console.error('Failed to fetch slots:', error);
-      setError('Failed to load slots');
-      setSlots([]);
+    } catch (err) {
+      console.log(err)
+      setError("Failed to load candidate dashboard");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleBookSlot = async (slot) => {
-  setError("");
-  setSuccess("");
 
-  if (hasBooked) {
-    setError(
-      "You have already booked a slot. Only one booking per candidate is allowed."
-    );
-    return;
-  }
+  const handleBookSlot = async (slotId) => {
+    setError("");
+    setSuccess("");
+    setIsBooking(true);
 
-  setIsBooking(true);
+    try {
+      await bookSlot(slotId);
 
-  try {
-   
-    await bookSlot(slot.id);
+      setSuccess("Slot booked successfully");
 
-    setHasBooked(true);
+      await loadDashboard();
 
-    setSuccess(
-      `Slot booked successfully for ${slot.slot_date} from ${slot.start_time} to ${slot.end_time}`
-    );
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 300);
 
-     setSlots(
-        slots.map((s) =>
-          s.id === slot.id
-            ? { ...s, isBooked: true, bookedBy: candidateEmail }
-            : s
-        )
+    } catch (err) {
+      setError(
+        err?.response?.data?.message || "Failed to book slot"
       );
-
-    
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 300);
-
-  } catch (err) {
-    setError(
-      err?.response?.data?.message || "Failed to book slot"
-    );
-  } finally {
-    setIsBooking(false);
-  }
-};
-
-
-  const availableSlots = slots.filter((s) => !s.isBooked);
-  const bookedSlots = slots.filter((s) => s.isBooked);
+    } finally {
+      setIsBooking(false);
+    }
+  };
 
   return (
     <>
@@ -96,105 +74,106 @@ export default function CandidateDashboard() {
       <div className="booking-page">
         <div className="booking-container">
           <header className="booking-header">
-            <h1 className="booking-title">Available Interview Slots</h1>
-            <p className="booking-subtitle">Select and book an available interview slot below</p>
+            <h1 className="booking-title">Interview Scheduler</h1>
+            <p className="booking-subtitle"> Book your interview slot</p>
           </header>
 
+          <StatusAlert
+            error={error}
+            success={success}
+            reset={() => { setError(''); setSuccess(''); }}
+          />
 
-          {error && (
-            <div className="alert-error flex items-center gap-3 mb-6 p-4 bg-red-50 border border-red-100 rounded-xl text-red-700">
-              <AlertCircle className="w-5 h-5 shrink-0" />
-              <p className="text-sm font-medium">{error}</p>
-            </div>
-          )}
+          {!isLoading && hasBooked && booking && (
+            <section className="booking-confirmation">
+              <div className="confirmation-card-body">
+                <div>
+                  <span className="status-indicator status-online mb-4">
+                    Confirmed Booking
+                  </span>
+                  <h2 className="text-3xl font-bold text-white mb-2">
+                    Your Interview is Set
+                  </h2>
+                  <p className="text-blue-100 mb-6 max-w-md">
+                    We've reserved this time for you. Please ensure you are available 15 minutes before the start time.
+                  </p>
 
-          {success && (
-            <div className="alert-success flex items-start gap-3 mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-              <Check className="w-5 h-5 text-green-700 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-green-800">Booking Confirmed!</p>
-                <p className="text-sm text-green-700">{success}</p>
-              </div>
-            </div>
-          )}
-
-          {hasBooked && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-              <p className="text-sm text-blue-700 font-medium">
-                You have already booked a slot. Additional bookings are disabled.
-              </p>
-            </div>
-          )}
-
-          {isLoading ? (
-            <div className="py-20 text-center">
-              <div className="loading-spinner h-8 w-8 border-2 border-slate-200 border-b-slate-900 rounded-full animate-spin inline-block"></div>
-              <p className="mt-4 text-slate-500 font-medium">Loading interview schedule...</p>
-            </div>
-          ) : (
-            <div className="space-y-12">
-
-              <section>
-                <h2 className="text-2xl font-bold text-slate-800 mb-6">Available Slots</h2>
-                <div className="slot-grid">
-                  {availableSlots.map((slot) => (
-                    <div key={slot.id} className="slot-card slot-card-available">
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="slot-info-group mb-0">
-                          <Calendar className="slot-icon-blue" />
-                          <div>
-                            <p className="slot-label">Date</p>
-                            <p className="slot-value">{new Date(slot.slot_date).toLocaleDateString()}</p>
-                          </div>
-                        </div>
-                        <span className="status-badge badge-available">Available</span>
+                  <div className="flex flex-wrap gap-6">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Calendar className="w-5 h-5 text-white" />
                       </div>
-
-                      <div className="slot-info-group mb-8">
-                        <Clock className="slot-icon-blue" />
-                        <div>
-                          <p className="slot-label">Time Window</p>
-                          <p className="slot-value">{slot.start_time} - {slot.end_time}</p>
-                        </div>
+                      <div>
+                        <p className="text-xs text-blue-200 uppercase font-bold">Date</p>
+                        <p className="font-semibold">{new Date(booking.slot_date).toLocaleDateString()}</p>
                       </div>
-
-                      <button
-                        onClick={() => handleBookSlot(slot)}
-                        disabled={isBooking || hasBooked}
-                        className="btn-book"
-                      >
-                        {isBooking ? 'Processing...' : 'Book This Slot'}
-                      </button>
                     </div>
-                  ))}
-                </div>
-              </section>
-
-
-              {bookedSlots.length > 0 && (
-                <section className="pt-10 border-t border-slate-200">
-                  <h2 className="text-2xl font-bold text-slate-800 mb-6">Currently Booked</h2>
-                  <div className="slot-grid">
-                    {bookedSlots.map((slot) => (
-                      <div key={slot.id} className="slot-card slot-card-booked">
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="slot-info-group mb-0">
-                            <Calendar className="slot-icon-muted" />
-                            <p className="slot-value">{new Date(slot.slot_date).toLocaleDateString()}</p>
-                          </div>
-                          <span className="status-badge badge-booked">Full</span>
-                        </div>
-                        <div className="slot-info-group mb-6">
-                          <Clock className="slot-icon-muted" />
-                          <p className="slot-value">{slot.start_time} - {slot.end_time}</p>
-                        </div>
-                        <button className="btn-booked-status" disabled>Booked</button>
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Clock className="w-5 h-5 text-white" />
                       </div>
-                    ))}
+                      <div>
+                        <p className="text-xs text-blue-200 uppercase font-bold">Time Window</p>
+                        <p className="font-semibold">{booking.start_time} - {booking.end_time}</p>
+                      </div>
+                    </div>
                   </div>
-                </section>
-              )}
-            </div>
+                </div>
+
+                <div className="bg-white/10 p-6 rounded-2xl border border-white/20 backdrop-blur-sm">
+                  <CheckCircle className="w-12 h-12 text-green-300 mb-3" />
+                  <p className="text-xs text-blue-100 italic">
+                    Booked on {new Date(booking.booked_at).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {!isLoading && !hasBooked && (
+            <section>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-bold text-slate-800">Available Time Slots</h2>
+                <span className="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                  {slots.length} Slots Open
+                </span>
+              </div>
+
+              <div className="slot-grid">
+                {slots.map((slot) => (
+                  <div key={slot.id} className="slot-card slot-card-available group">
+                    <div className="slot-info-group">
+                      <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
+                        <Calendar className="slot-icon-blue" />
+                      </div>
+                      <div>
+                        <p className="slot-label">Date</p>
+                        <p className="slot-value">{new Date(slot.slot_date).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+
+                    <div className="slot-info-group mb-8">
+                      <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
+                        <Clock className="slot-icon-blue" />
+                      </div>
+                      <div>
+                        <p className="slot-label">Time Slot</p>
+                        <p className="slot-value">{slot.start_time} - {slot.end_time}</p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleBookSlot(slot.id)}
+                      disabled={isBooking}
+                      className="btn-book flex items-center justify-center gap-2 group"
+                    >
+                      <span>{isBooking ? "Confirming..." : "Book Slot"}</span>
+                      {!isBooking && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
           )}
         </div>
       </div>

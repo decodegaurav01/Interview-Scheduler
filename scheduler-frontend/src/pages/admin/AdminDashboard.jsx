@@ -1,113 +1,216 @@
-import { Navbar } from '../../components/Navbar'
 import { useEffect, useState } from 'react';
-import { Calendar, User, Clock } from 'lucide-react';
-import '../../styles/admin/AdminDashboard.css'
-import { getAllInterviewBookings } from '../../services/adminService';
-
-
+import { Navbar } from '../../components/Navbar';
+import { Calendar, Clock, Search, Trash2, Users, CalendarCheck, BookIcon, BookOpen } from 'lucide-react';
+import '../../styles/admin/AdminDashboard.css';
+import { cancelBooking, getAllInterviewBookings } from '../../services/adminService';
+import { StatCard } from '../../components/StatCard';
+import StatusAlert from '../../components/StatusAlert';
 
 export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      const response = await getAllInterviewBookings();
-    setBookings(response);
-    setIsLoading(false)
-    };
-
     fetchBookings();
   }, []);
 
+  const fetchBookings = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getAllInterviewBookings();
+
+      setBookings(Array.isArray(response) ? response : []);
+    } catch (err) {
+      console.error("Failed to fetch bookings", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  const handleCancelBooking = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to cancel this interview? This action cannot be undone.")) return;
+
+
+    const originalBookings = [...bookings];
+
+
+    setBookings(prev => prev.filter(b => b.id !== bookingId));
+
+    try {
+      await cancelBooking(bookingId);
+      setSuccess("Booking cancelled successfully");
+
+
+      setTimeout(() => setSuccess(''), 3000);
+
+    } catch (err) {
+      console.log(err)
+      setBookings(originalBookings);
+      setError("Failed to cancel booking. Please try again.");
+      setTimeout(() => setError(''), 3000);
+    }
+  };
+
+
+  const filteredBookings = bookings.filter(b =>
+    b.candidate_email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    new Date(b.date).toLocaleDateString().includes(searchQuery)
+  );
+
+
+  const stats = {
+    total: bookings.length,
+    uniqueCandidates: new Set(bookings.map((b) => b.candidate_email)).size,
+    upcoming: bookings.filter((b) => new Date(b.date) > new Date()).length
+  };
+
   return (
-    
     <>
       <Navbar role="admin" />
-      <div className="dashboard-wrapper">
-      <div className="dashboard-container">
-        <h1 className="dashboard-title">Admin Dashboard</h1>
-        <p className="dashboard-subtitle">Overview of all scheduled interviews</p>
 
-        <div className="data-card">
-          <div className="card-header">
-            <h2 className="card-title">Interview Bookings</h2>
-          </div>
+      <div className="dashboard-overview-wrapper">
+        <div className="dashboard-overview-container">
 
-          {isLoading ? (
-            <div className="state-container">
-              <div className="loading-spinner" />
-              <p className="mt-4 text-slate-500">Loading bookings...</p>
+          <header className="overview-header">
+            <div>
+              <h1 className="overview-title">Dashboard Overview</h1>
+              <p className="text-slate-500 mt-1">Manage your interview schedules and talent pipeline.</p>
             </div>
-          ) : bookings.length === 0 ? (
-            <div className="state-container">
-              <Calendar className="empty-icon" />
-              <p className="text-slate-500">No bookings yet. Candidates will appear here soon.</p>
+          </header>
+
+          <StatusAlert
+            error={error}
+            success={success}
+            reset={() => { setError(''); setSuccess(''); }}
+          />
+
+          <div className="overview-card">
+            <div className="overview-card-header">
+              <h2 className="font-semibold text-slate-900">Recent Bookings</h2>
+              <div className='flex items-center gap-4 w-full sm:w-auto'>
+                <div className="search-container">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search emails or dates..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                  />
+                </div>
+                <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full whitespace-nowrap">
+                  {filteredBookings.length} found
+                </span>
+              </div>
             </div>
-          ) : (
-            <div className="table-container">
-              <table className="admin-table">
-                <thead className="table-head">
-                  <tr>
-                    <th className="table-th">Candidate Email</th>
-                    <th className="table-th">Interview Date</th>
-                    <th className="table-th">Time</th>
-                    <th className="table-th">Booked At</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bookings.map((booking) => (
-                    <tr key={booking.id} className="table-row">
-                      <td className="table-td">
-                        <div className="cell-content">
-                          <User className="w-4 h-4 text-slate-400" />
-                          {booking.candidate_email}
-                        </div>
-                      </td>
-                      <td className="table-td">
-                        <div className="cell-content">
-                          <Calendar className="w-4 h-4 text-slate-400" />
-                          {new Date(booking.slot_date).toLocaleDateString()}
-                        </div>
-                      </td>
-                      <td className="table-td">
-                        <div className="cell-content">
-                          <Clock className="w-4 h-4 text-slate-400" />
-                          {booking.start_time} - {booking.end_time}
-                        </div>
-                      </td>
-                      <td className="table-td text-slate-400">
-                        {new Date(booking.booked_at).toLocaleDateString()}
-                      </td>
+
+            {isLoading ? (
+              <div className="p-12 flex flex-col items-center justify-center text-slate-400">
+                <div className="w-8 h-8 border-2 border-slate-200 border-t-indigo-600 rounded-full animate-spin mb-4" />
+                <p>Loading schedule...</p>
+              </div>
+            ) : filteredBookings.length === 0 ? (
+              <div className="p-16 flex flex-col items-center justify-center text-slate-400">
+                <div className="bg-slate-50 p-4 rounded-full mb-4">
+                  <Calendar className="w-8 h-8 text-slate-300" />
+                </div>
+                <p>No bookings found matching your search.</p>
+              </div>
+            ) : (
+              <div className="overview-table-wrapper">
+                <table className="overview-table">
+                  <thead className="overview-thead">
+                    <tr>
+                      <th className="px-6 py-4">Candidate</th>
+                      <th className="px-6 py-4">Schedule</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4">Booked Date</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredBookings.map((booking) => {
+                      const isPast = new Date(booking.date) < new Date();
+                      return (
+                        <tr key={booking.id} className="overview-tr group">
+                          <td className="overview-td">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-xs">
+                                {booking.candidate_email.charAt(0).toUpperCase()}
+                              </div>
+                              <p className="font-medium text-slate-900">{booking.candidate_email}</p>
+                            </div>
+                          </td>
+                          <td className="overview-td">
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-2 text-slate-700 font-medium">
+                                <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                                {booking.date}
+                              </div>
+                              <div className="flex items-center gap-2 text-slate-500 text-xs">
+                                <Clock className="w-3.5 h-3.5" />
+                                {booking.startTime} - {booking.endTime}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="overview-td">
+                            <span className={`badge ${isPast ? 'badge-completed' : 'badge-scheduled'}`}>
+                              {isPast ? 'Completed' : 'Scheduled'}
+                            </span>
+                          </td>
+                          <td className="overview-td text-slate-500">
+                            {new Date(booking.booked_at).toLocaleDateString()}
+                          </td>
+                          <td className="overview-td text-right">
+                            <button
+                              onClick={() => handleCancelBooking(booking.id)}
+                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                              title="Cancel Booking"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
 
-        {/* Analytics Section */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3 className="stat-label">Total Bookings</h3>
-            <p className="stat-value">{bookings.length}</p>
-          </div>
-          <div className="stat-card">
-            <h3 className="stat-label">Unique Candidates</h3>
-            <p className="stat-value">
-              {new Set(bookings.map((b) => b.candidate_email)).size}
-            </p>
-          </div>
-          <div className="stat-card">
-            <h3 className="stat-label">Upcoming Interviews</h3>
-            <p className="stat-value">
-              {bookings.filter((b) => new Date(b.slot_date) > new Date()).length}
-            </p>
+          {/* Dynamic Statistics Grid */}
+          <div className="stats-container">
+            <StatCard
+              icon={BookOpen}
+              label="Total Bookings"
+              value={stats.total}
+              color="text-blue-600"
+              bg="bg-blue-50"
+            />
+            <StatCard
+              icon={Users}
+              label="Unique Talent"
+              value={stats.uniqueCandidates}
+              color="text-indigo-600"
+              bg="bg-indigo-50"
+            />
+            <StatCard
+              icon={CalendarCheck}
+              label="Upcoming Slots"
+              value={stats.upcoming}
+              color="text-emerald-600"
+              bg="bg-emerald-50"
+            />
           </div>
         </div>
       </div>
-    </div>
-   </>
+    </>
   );
 }
+
