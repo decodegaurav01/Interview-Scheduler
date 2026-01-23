@@ -144,6 +144,26 @@ export async function deleteSlot(slotId) {
   }
 }
 
+//  Update Slot Status
+
+// services/adminService.js
+export async function updateSlotStatus(slotId, isActive) {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.patch(
+    `${config.serverUrl}/admin/slots/${slotId}/status`,
+    { isActive },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
+
+
 
 // Admin Dashboard
 
@@ -166,4 +186,19 @@ export async function getAllInterviewBookings() {
     console.error("Error fetching interview bookings:", error);
     throw error;
   }
+}
+
+export async function cancelBooking(bookingId) {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.delete(
+    `${config.serverUrl}/admin/bookings/${bookingId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
 }

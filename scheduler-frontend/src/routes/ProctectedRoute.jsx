@@ -15,12 +15,12 @@ export function ProtectedRoute({ children, requiredRole }) {
     const role = localStorage.getItem('role');
 
     if (!token) {
-      navigate('/admin-login');
+      navigate('/');
       return;
     }
 
     if (requiredRole && role !== requiredRole) {
-      navigate('/unauthorized');
+      navigate('/');
       return;
     }
 

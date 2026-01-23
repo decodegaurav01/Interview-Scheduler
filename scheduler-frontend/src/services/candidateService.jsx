@@ -1,32 +1,28 @@
 import axios from "axios";
 import { config } from "../config";
 
-export async function getAvailableSlots() {
-  try {
-    const token = localStorage.getItem("candidateToken");
 
-    const response = await axios.get(
-      `${config.serverUrl}/candidate/available-slots`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+export async function getCandidateDashboard() {
+  const token = localStorage.getItem("token");
 
-    return response.data;
+  const response = await axios.get(
+    `${config.serverUrl}/candidate/dashboard`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-  } catch (error) {
-    console.error("Error fetching available slots:", error);
-    throw error;
-  }
+  return response.data;
 }
+
 
 
 
 export async function bookSlot(slotId) {
   try {
-    const token = localStorage.getItem("candidateToken");
+    const token = localStorage.getItem("token");
 
     const response = await axios.post(
       `${config.serverUrl}/candidate/slot-booking`,

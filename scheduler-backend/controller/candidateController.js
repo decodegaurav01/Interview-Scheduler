@@ -1,29 +1,6 @@
 const pool = require("../config/db");
 
 
-// --- Get all slots
-exports.getAvailableSlots = (req, res) => {
-  const sql = `
-    SELECT
-      id,
-      slot_date,
-      start_time,
-      end_time
-    FROM interview_slots
-    WHERE is_booked = false
-      AND slot_date >= CURDATE()
-    ORDER BY slot_date ASC, start_time ASC
-  `;
-
-  pool.query(sql, (error, data) => {
-    if (error) {
-      console.error("Error fetching available slots:", error);
-      return res.send(error)
-    }
-
-    return res.send(data)
-  });
-}
 
 // Slot Booking
 exports.bookSlot = (req, res) => {
@@ -81,10 +58,9 @@ exports.bookSlot = (req, res) => {
         [slotId, whitelistedEmailId],
         (err) => {
           if (err) {
-            return res.send("Failed to book slot")
+            return res.send(err)
           }
 
-      
           const updateSlotSql = `
             UPDATE interview_slots
             SET is_booked = true
@@ -100,6 +76,64 @@ exports.bookSlot = (req, res) => {
           });
         }
       );
+    });
+  });
+};
+
+// candidate Dasboard
+
+exports.getCandidateDashboard = (req, res) => {
+  const whitelistedEmailId = req.whitelistedEmailId;
+
+  // Check if candidate already booked
+  const bookingSql = `
+    SELECT
+      ib.id AS booking_id,
+      islots.slot_date,
+      islots.start_time,
+      islots.end_time,
+      ib.booked_at
+    FROM interview_bookings ib
+    JOIN interview_slots islots
+      ON ib.slot_id = islots.id
+    WHERE ib.whitelisted_email_id = ?
+  `;
+
+  pool.query(bookingSql, [whitelistedEmailId], (err, rows) => {
+    if (err) {
+      return res.send(err)
+    }
+
+    if (rows.length > 0) {
+      return res.status(200).json({
+        hasBooked: true,
+        booking: rows[0],
+      });
+    }
+
+    // No booking → fetch available slots
+    const slotsSql = `
+      SELECT
+        id,
+        slot_date,
+        start_time,
+        end_time
+      FROM interview_slots
+      WHERE is_booked = false
+        AND is_active = True
+        AND slot_date >= CURDATE()
+      ORDER BY slot_date ASC, start_time ASC
+    `;
+
+    pool.query(slotsSql, (err, slots) => {
+      if (err) {
+        return res.send(err)
+      }
+
+      return res.status(200).json({
+        hasBooked: false,
+        availableSlots: slots,
+      });
     });
   });
 };

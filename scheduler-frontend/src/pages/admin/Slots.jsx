@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { Plus, Trash2, Calendar, Clock } from 'lucide-react';
 import { Navbar } from "../../components/Navbar";
 import '../../styles/admin/Slot.css'
-import { createSlot, deleteSlot, getAllSlots } from "../../services/adminService";
+import { createSlot, deleteSlot, getAllSlots, updateSlotStatus } from "../../services/adminService";
+import StatusAlert from "../../components/StatusAlert";
 
 
 
@@ -31,11 +32,13 @@ export default function Slots() {
     try {
       const response = await getAllSlots();
       console.log(response)
+
       if (response) {
         setSlots(response);
       } else {
         setSlots([]);
       }
+
     } catch (error) {
       console.error('Failed to fetch slots:', error);
       setError('Failed to load slots');
@@ -54,7 +57,7 @@ export default function Slots() {
       return;
     }
 
-    
+
     if (formData.startTime >= formData.endTime) {
       setError('End time must be after start time');
       return;
@@ -67,65 +70,74 @@ export default function Slots() {
       setError('Cannot create slots for past dates');
       return;
     }
- 
+
     setIsSaving(true);
 
     try {
       const response = await createSlot(formData)
       console.log(response)
 
-      if(response === 'Slot already exists')
+      if (response === 'Slot already exists')
         setError('Slot already exists')
       else {
         setFormData({ slotDate: '', startTime: '', endTime: '' });
 
-
-        
         setSuccess(
           `Slot created for ${formData.slotDate} from ${formData.startTime} to ${formData.endTime}`
         );
 
-        fetchSlots(); 
+        fetchSlots();
       }
-     
+
     } catch (err) {
-      setError(err  ? err.message : 'Failed to create slot');
+      setError(err ? err.message : 'Failed to create slot');
     } finally {
       setIsSaving(false);
     }
   };
 
- const handleDeleteSlot = async (id) => {
-  if (!window.confirm('Are you sure you want to delete this slot?')) {
-    return;
-  }
-
-  try {
- 
-     await deleteSlot(id);
-
-  
-    setSlots((prevSlots) => prevSlots.filter((s) => s.id !== id));
-    setSuccess('Slot deleted successfully');
-    
-
-    setError(''); 
-  } catch (err) {
-    const errorMessage = err.response?.data?.message || err.message || 'Failed to delete slot';
-    setError(errorMessage);
-    setSuccess('');
-  }
-};
-
-  useEffect(() => {
-    if (error || success) {
-      const timer = setTimeout(() => {
-        setError('');
-        setSuccess('');
-      }, 5000);
-      return () => clearTimeout(timer);
+  const handleDeleteSlot = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this slot?')) {
+      return;
     }
-  }, [error, success]);
+
+    try {
+
+      await deleteSlot(id);
+
+
+      setSlots((prevSlots) => prevSlots.filter((s) => s.id !== id));
+      setSuccess('Slot deleted successfully');
+
+
+      setError('');
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to delete slot';
+      setError(errorMessage);
+      setSuccess('');
+    }
+  };
+
+  const handleToggleStatus = async (slot) => {
+    try {
+      await updateSlotStatus(slot.id, !slot.isActive);
+      fetchSlots()
+
+      setSlots((prev) =>
+        prev.map((s) =>
+          s.id === slot.id
+            ? { ...s, is_active: !s.isActive }
+            : s
+        )
+      );
+
+
+    } catch (err) {
+      console.log(err)
+      setError("Failed to update slot status");
+    }
+  };
+
 
   return (
     <>
@@ -141,12 +153,15 @@ export default function Slots() {
           <div className="create-slot-card">
             <h2 className="card-heading">Create New Slot</h2>
 
-            {error && <div className="alert-error mb-4 p-4 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700">{error}</div>}
-            {success && <div className="alert-success mb-4 p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">{success}</div>}
+            <StatusAlert
+              error={error}
+              success={success}
+              reset={() => { setError(''); setSuccess(''); }}
+            />
 
             <div className="slot-form-container">
               <div className="slot-form-grid">
-              
+
                 <div className="input-group">
                   <label className="input-label">Date</label>
                   <input
@@ -181,7 +196,7 @@ export default function Slots() {
                 </div>
               </div>
 
-             
+
               <button
                 type="button"
                 disabled={isSaving}
@@ -218,8 +233,8 @@ export default function Slots() {
                     <tr>
                       <th className="slots-th">Date</th>
                       <th className="slots-th">Time</th>
-                      <th className="slots-th">Status</th>
-                      <th className="slots-th">Booked By</th>
+                      <th className="slots-th">Booking</th>
+                      <th className="slots-th">Active</th>
                       <th className="slots-th">Action</th>
                     </tr>
                   </thead>
@@ -243,14 +258,35 @@ export default function Slots() {
                             {slot.isBooked ? 'Booked' : 'Available'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-slate-500 italic">
-                          {slot.bookedBy || 'Unbooked'}
+                        <td className="px-6 py-4 text-sm">
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm text-slate-500">
+                              {slot.isActive ? "Active" : "Frozen"}
+                            </span>
+
+                            <button
+                              onClick={() => handleToggleStatus(slot)}
+                              disabled={slot.isBooked}
+                              className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-all duration-300
+      ${slot.isBooked ? "opacity-30 cursor-not-allowed grayscale" : "cursor-pointer"}
+      ${slot.isActive ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" : "bg-slate-300"}`}
+                            >
+                              <span className="sr-only">Toggle Slot</span>
+
+
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 shadow-sm
+        ${slot.isActive ? "translate-x-6" : "translate-x-1"}`}
+                              />
+                            </button>
+                          </div>
                         </td>
+
                         <td className="px-6 py-4 text-sm">
                           <button
                             onClick={() => handleDeleteSlot(slot.id)}
-                            disabled={slot.isBooked}
-                            className={`btn-delete-slot ${slot.isBooked ? 'opacity-50 cursor-not-allowed' : ''}`}
+
+                            className={`btn-delete-slot`}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
