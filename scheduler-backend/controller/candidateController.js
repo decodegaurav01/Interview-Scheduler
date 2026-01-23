@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const { sendBookingEmailToAdmin } = require("../utils/mailer");
 
 
 
@@ -6,6 +7,7 @@ const pool = require("../config/db");
 exports.bookSlot = (req, res) => {
   const { slotId } = req.body;
   const whitelistedEmailId = req.whitelistedEmailId;
+  const candidateEmail = req.candidateEmail;
 
   if (!slotId) {
     return res.status(400).json({
@@ -13,7 +15,7 @@ exports.bookSlot = (req, res) => {
     });
   }
 
- 
+
   const checkCandidateSql = `
     SELECT id FROM interview_bookings
     WHERE whitelisted_email_id = ?
@@ -28,9 +30,9 @@ exports.bookSlot = (req, res) => {
       return res.send("You have already booked a slot")
     }
 
-  
+
     const checkSlotSql = `
-      SELECT is_booked FROM interview_slots
+      SELECT slot_date, start_time, end_time, is_booked FROM interview_slots
       WHERE id = ?
     `;
 
@@ -47,7 +49,8 @@ exports.bookSlot = (req, res) => {
         return res.send("Slot already booked")
       }
 
-    
+      const slot = rows[0];
+
       const insertBookingSql = `
         INSERT INTO interview_bookings (slot_id, whitelisted_email_id)
         VALUES (?, ?)
@@ -67,9 +70,20 @@ exports.bookSlot = (req, res) => {
             WHERE id = ?
           `;
 
-          pool.query(updateSlotSql, [slotId], (err) => {
+          pool.query(updateSlotSql, [slotId],async (err) => {
             if (err) {
               return res.send("Failed to update slot")
+            }
+
+            try {
+              await sendBookingEmailToAdmin({
+                candidateEmail,
+                slotDate: slot.slot_date,
+                startTime: slot.start_time,
+                endTime: slot.end_time,
+              });
+            } catch (emailErr) {
+              console.error("Email failed:", emailErr);
             }
 
             return res.send("Slot booked successfully")

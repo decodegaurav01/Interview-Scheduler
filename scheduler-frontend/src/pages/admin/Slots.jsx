@@ -8,6 +8,7 @@ import { Navbar } from "../../components/Navbar";
 import '../../styles/admin/Slot.css'
 import { createSlot, deleteSlot, getAllSlots, updateSlotStatus } from "../../services/adminService";
 import StatusAlert from "../../components/StatusAlert";
+import DeleteModal from "../../components/DeleteModal";
 
 
 
@@ -23,6 +24,9 @@ export default function Slots() {
     startTime: '',
     endTime: '',
   });
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedSlotId, setSelectedSlotId] = useState(null);
 
   useEffect(() => {
     fetchSlots();
@@ -96,25 +100,29 @@ export default function Slots() {
     }
   };
 
-  const handleDeleteSlot = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this slot?')) {
-      return;
-    }
 
+  const openDeleteModal = (id) => {
+    setSelectedSlotId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteSlot = async () => {
+    setIsDeleting(true);
     try {
+      await deleteSlot(selectedSlotId);
 
-      await deleteSlot(id);
-
-
-      setSlots((prevSlots) => prevSlots.filter((s) => s.id !== id));
+      setSlots((prevSlots) => prevSlots.filter((s) => s.id !== selectedSlotId));
       setSuccess('Slot deleted successfully');
-
+      setShowDeleteModal(false);
 
       setError('');
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'Failed to delete slot';
       setError(errorMessage);
       setSuccess('');
+    } finally {
+      setShowDeleteModal(false);
+      setSelectedSlotId(null);
     }
   };
 
@@ -284,7 +292,7 @@ export default function Slots() {
 
                         <td className="px-6 py-4 text-sm">
                           <button
-                            onClick={() => handleDeleteSlot(slot.id)}
+                            onClick={() => openDeleteModal(slot.id)}
 
                             className={`btn-delete-slot`}
                           >
@@ -299,6 +307,15 @@ export default function Slots() {
             )}
           </div>
         </div>
+        <DeleteModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteSlot}
+          isLoading={isDeleting}
+          title="Confirm Deletion"
+          message="Are you sure you want to delete this email?"
+          warning="This action cannot be undone."
+        />
       </div>
     </>
   );
