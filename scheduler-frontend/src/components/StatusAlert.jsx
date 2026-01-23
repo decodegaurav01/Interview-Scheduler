@@ -7,7 +7,7 @@ export default function StatusAlert({ error, success, reset }) {
     if (error || success) {
       const timer = setTimeout(() => {
         reset();
-      }, 5000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [error, success, reset]);

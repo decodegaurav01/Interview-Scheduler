@@ -5,6 +5,7 @@ import '../../styles/admin/AdminDashboard.css';
 import { cancelBooking, getAllInterviewBookings } from '../../services/adminService';
 import { StatCard } from '../../components/StatCard';
 import StatusAlert from '../../components/StatusAlert';
+import DeleteModal from '../../components/DeleteModal';
 
 export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
@@ -12,6 +13,10 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
+
 
 
   useEffect(() => {
@@ -31,28 +36,28 @@ export default function AdminDashboard() {
     }
   };
 
+  const openDeleteModal = (id) => {
+    setSelectedBookingId(id);
+    setShowDeleteModal(true);
+  };
 
-  const handleCancelBooking = async (bookingId) => {
-    if (!window.confirm("Are you sure you want to cancel this interview? This action cannot be undone.")) return;
-
-
+  const handleCancelBooking = async () => {
+    setIsDeleting(true);
     const originalBookings = [...bookings];
-
-
-    setBookings(prev => prev.filter(b => b.id !== bookingId));
-
     try {
-      await cancelBooking(bookingId);
+      await cancelBooking(selectedBookingId);
       setSuccess("Booking cancelled successfully");
-
-
-      setTimeout(() => setSuccess(''), 3000);
+      setBookings(prev => prev.filter(b => b.id !== selectedBookingId));
+      setShowDeleteModal(false);
 
     } catch (err) {
       console.log(err)
       setBookings(originalBookings);
       setError("Failed to cancel booking. Please try again.");
-      setTimeout(() => setError(''), 3000);
+
+    } finally {
+      setShowDeleteModal(false);
+      setSelectedBookingId(null);
     }
   };
 
@@ -168,7 +173,7 @@ export default function AdminDashboard() {
                           </td>
                           <td className="overview-td text-right">
                             <button
-                              onClick={() => handleCancelBooking(booking.id)}
+                              onClick={() => openDeleteModal(booking.id)}
                               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                               title="Cancel Booking"
                             >
@@ -209,6 +214,15 @@ export default function AdminDashboard() {
             />
           </div>
         </div>
+        <DeleteModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleCancelBooking}
+          isLoading={isDeleting}
+          title="Confirm Deletion"
+          message="Are you sure you want to delete this email?"
+          warning="This action cannot be undone."
+        />
       </div>
     </>
   );

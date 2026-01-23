@@ -5,6 +5,7 @@ import { Trash2, Plus, Mail } from 'lucide-react';
 import '../../styles/admin/WhitelistCandidate.css'
 import { addWhitelistEmail, deleteWhitelistedEmail, getWhitelistedEmails } from "../../services/adminService";
 import StatusAlert from "../../components/StatusAlert";
+import DeleteModal from "../../components/DeleteModal";
 
 
 
@@ -12,10 +13,14 @@ import StatusAlert from "../../components/StatusAlert";
 export default function WhitelistCandidate() {
   const [emails, setEmails] = useState([]);
   const [newEmail, setNewEmail] = useState('');
+
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
@@ -84,13 +89,18 @@ export default function WhitelistCandidate() {
   };
 
   const handleDeleteEmail = async () => {
+    setIsDeleting(true);
     try {
       const response = await deleteWhitelistedEmail(selectedUserId);
 
+      if(!response)
+        setError("Fail to Delete Slot")
+
       setSuccess("Email removed successfully");
       setEmails((prev) => prev.filter((e) => e.id !== selectedUserId));
+      setShowDeleteModal(false);
     } catch (err) {
-
+      console.log(err)
       setError("Could not delete email");
     } finally {
       setShowDeleteModal(false);
@@ -182,41 +192,15 @@ export default function WhitelistCandidate() {
             )}
           </div>
         </div>
-        {showDeleteModal && (
-          <div className="pop-card">
-            <div
-              className="pop-overlay"
-              onClick={() => setShowDeleteModal(false)}
-            />
-            <div className="pop-content">
-              <h3 className="pop-title">
-                Confirm Deletion
-              </h3>
-              <p className="pop-title-2">
-                Are you sure you want to delete this email?
-                <br />
-                <span className="pop-warning">
-                  This action cannot be undone.
-                </span>
-              </p>
-              <div className="pop-actions">
-                <button
-                  className="btn-cancel"
-                  onClick={() => setShowDeleteModal(false)}
-                >
-                  Cancel
-                </button>
-
-                <button
-                  className="btn-confirm-delete"
-                  onClick={handleDeleteEmail}
-                >
-                  Yes, Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <DeleteModal 
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteEmail}
+          isLoading={isDeleting}
+          title="Confirm Deletion"
+          message="Are you sure you want to delete this email?"
+          warning="This action cannot be undone."
+        />
       </div>
     </>
   );
