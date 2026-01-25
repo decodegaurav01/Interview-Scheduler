@@ -1,0 +1,107 @@
+@import 'tailwindcss';
+
+.admin-login-page-wrapper {
+  /* Dark Gradient Background: Deep Slate */
+  @apply min-h-screen flex items-center justify-center p-6 bg-gradient-to-tr from-slate-950 via-slate-900 to-slate-950;
+}
+
+.admin-login-card-container {
+  @apply w-full max-w-md;
+}
+
+.admin-login-card {
+  /* Dark Card: Slate-900 with subtle border */
+  @apply bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/50 p-8 md:p-10;
+}
+
+/* Header Section */
+.admin-login-header {
+  @apply mb-10 text-center;
+}
+
+.admin-login-icon-box {
+  /* Dark Mode Icon Box: Subtle Blue Tint */
+  @apply inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 mb-4;
+}
+
+.admin-login-title {
+  @apply text-2xl font-bold tracking-tight text-white;
+}
+
+.admin-login-subtitle {
+  @apply text-slate-400 mt-2;
+}
+
+/* Error Message */
+@theme {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; } 
+  }
+
+  @keyframes slide-in-top {
+    from { transform: translateY(-0.25rem); }
+    to { transform: translateY(0); }
+  }
+
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-in-top: slide-in-top 0.3s ease-out;
+}
+
+.animate-admin-login-entry {
+  @apply animate-fade-in animate-slide-in-top;
+}
+
+.admin-login-error-alert {
+  /* Dark Mode Alert: Red Tint */
+  @apply flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl p-4 mb-6;
+}
+
+/* Form Styles */
+.admin-login-form {
+  @apply space-y-5;
+}
+
+.form-group {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply text-sm font-semibold text-slate-300 ml-1;
+}
+
+.input-wrapper {
+  @apply relative;
+}
+
+.input-icon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500;
+}
+
+.form-input {
+  /* Dark Input: Darker background than card */
+  @apply w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white
+         placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 
+         focus:border-blue-500 transition-all;
+}
+
+/* Submit Button */
+.btn-submit {
+  /* Primary Button: Blue 600 for visibility on dark */
+  @apply w-full bg-blue-600 text-white py-3 rounded-xl font-semibold 
+         hover:bg-blue-500 active:scale-[0.98] disabled:opacity-50 
+         disabled:pointer-events-none transition-all shadow-lg shadow-blue-900/20;
+}
+
+.spinner {
+  @apply w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin;
+}
+
+/* Footer Section */
+.admin-login-footer {
+  @apply text-center text-sm text-slate-500 mt-8;
+}
+
+.cadidate-login-link {
+  @apply font-semibold text-blue-400 hover:text-blue-300 hover:underline;
+}

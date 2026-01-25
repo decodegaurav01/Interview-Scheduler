@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+.candidateLogin-page-wrapper {
+  /* Dark Page Background */
+  @apply min-h-screen flex items-center justify-center p-4 bg-slate-950;
+}
+
+.candidateLogin-card-container {
+  @apply w-full max-w-md;
+}
+
+.candidateLogin-card {
+  /* Dark Card: Slate-900 */
+  @apply bg-slate-900 border border-slate-800 rounded-2xl shadow-xl shadow-black/50 p-8 md:p-10;
+}
+
+.candidateLogin-header {
+  @apply text-center mb-8;
+}
+
+.candidateLogin-title {
+  /* Title: White */
+  @apply text-3xl font-bold tracking-tight text-white mb-2;
+}
+
+.candidateLogin-subtitle {
+  @apply text-slate-400 font-medium;
+}
+
+/* Form Elements */
+.candidateLogin-form {
+  @apply space-y-5;
+}
+
+.candidateLogin-label {
+  @apply block text-sm font-semibold text-slate-300 mb-2;
+}
+
+.candidateLogin-input {
+  /* Dark Input: Slate-950 (Darker than card) */
+  @apply w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white 
+         placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 
+         focus:border-blue-500 transition-all disabled:opacity-60;
+}
+
+.btn-candidateLogin-submit {
+  /* Button: Blue-600 for visibility on dark */
+  @apply w-full bg-blue-600 text-white py-3 rounded-xl font-semibold 
+         hover:bg-blue-500 active:scale-[0.98] disabled:opacity-50 
+         disabled:pointer-events-none transition-all shadow-lg shadow-blue-900/20;
+}
+
+
+@theme {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-in-top {
+    from { transform: translateY(-0.5rem); }
+    to { transform: translateY(0); }
+  }
+
+  --animate-fade-in: fade-in 0.4s ease-out;
+  --animate-slide-in: slide-in-top 0.4s ease-out;
+}
+
+.candidateLogin-alert {
+  @apply flex items-center gap-3 rounded-xl p-4 mb-6 text-sm font-medium;
+}
+.candidateLogin-animate-alert {
+  @apply animate-fade-in animate-slide-in;
+}
+
+/* Dark Mode Alerts: Transparent backgrounds */
+.candidateLogin-alert-destructive {
+  @apply bg-red-500/10 border border-red-500/20 text-red-400;
+}
+
+.candidateLogin-alert-success {
+  @apply bg-emerald-500/10 border border-emerald-500/20 text-emerald-400;
+}
+
+/* Info Section */
+.candidateLogin-info-box {
+  /* Info Box: Slate-950 or very dark slate */
+  @apply mt-8 p-5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-400 space-y-2;
+}
+
+.candidateLogin-footer-link {
+  @apply text-sm text-slate-500 text-center mt-8;
+}
+
+.candidateLogin-link {
+  @apply font-semibold text-blue-400 hover:text-blue-300 hover:underline;
+}

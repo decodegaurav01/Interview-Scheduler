@@ -3,7 +3,7 @@ import { config } from "../config";
 
 
 export async function getCandidateDashboard() {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const response = await axios.get(
     `${config.serverUrl}/candidate/dashboard`,
@@ -22,7 +22,7 @@ export async function getCandidateDashboard() {
 
 export async function bookSlot(slotId) {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     const response = await axios.post(
       `${config.serverUrl}/candidate/slot-booking`,
@@ -37,8 +37,24 @@ export async function bookSlot(slotId) {
     return response.data;
 
   } catch (error) {
-     console.error("Error Slot Booking :", error);
+    console.error("Error Slot Booking :", error);
     throw error;
   }
 }
 
+export async function getInterviewDetails() {
+  const token = sessionStorage.getItem("token");
+
+  const response = await axios.get(
+    `${config.serverUrl}/candidate/interview`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  console.log(response.data)
+
+  return response.data;
+}

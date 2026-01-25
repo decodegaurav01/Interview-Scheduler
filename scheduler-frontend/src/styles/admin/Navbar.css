@@ -1,20 +1,20 @@
 @import 'tailwindcss';
 
 .nav-container {
-  @apply bg-white border-b border-slate-200 sticky top-0 z-50;
+  @apply bg-white border-b border-slate-600/20 sticky top-0 z-50
+   backdrop-blur-lg ;
 }
 
 .nav-wrapper {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  @apply max-h-full mx-auto px-4 sm:px-6 lg:px-8;
 }
 
 .nav-content {
   @apply flex justify-between items-center h-20;
 }
 
-/* Brand & Links Group */
 .nav-left {
-  @apply flex items-center   gap-140;
+  @apply flex items-center   gap-80;
 }
 
 .nav-brand {
@@ -22,23 +22,21 @@
 }
 
 .nav-links-desktop {
-  @apply hidden md:flex gap-6;
+  @apply hidden md:flex  gap-4;
 }
 
-/* Base Link Style */
 .nav-link {
-  @apply text-sm font-medium transition-colors duration-200;
+  @apply text-sm font-medium  transition-colors duration-200;
 }
 
 .nav-link-inactive {
-  @apply text-slate-500 hover:text-blue-500 ;
+  @apply text-slate-500 p-2 hover:text-blue-500 ;
 }
 
 .nav-link-active {
-  @apply text-blue-600;
+  @apply text-blue-500 bg-blue-100 p-2 rounded-lg ;
 }
 
-/* Action Group */
 .nav-right {
   @apply hidden md:flex items-center gap-4;
 }
@@ -48,12 +46,10 @@
          hover:bg-rose-600 hover:text-white transition-all duration-200;
 }
 
-/* Mobile Toggle */
 .btn-mobile-menu {
   @apply md:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors;
 }
 
-/* Mobile Menu Panel */
 .nav-menu-mobile {
   @apply md:hidden pb-4 space-y-1 ;
 }

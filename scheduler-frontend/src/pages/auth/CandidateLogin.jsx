@@ -22,8 +22,8 @@ export default function CandidateLogin() {
         try {
             const res = await candidateLogin(email);
 
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('role', res.role);
+            sessionStorage.setItem('token', res.token);
+            sessionStorage.setItem('role', res.role);
 
             setSuccess('Verification successful! Redirecting...');
             setIsVerificationSent(true);
