@@ -18,6 +18,7 @@ export default function CandidateDashboard() {
   const [success, setSuccess] = useState("");
 
 
+
   useEffect(() => {
     loadDashboard();
   }, []);
@@ -27,12 +28,23 @@ export default function CandidateDashboard() {
       const data = await getCandidateDashboard();
       if (data.hasBooked) {
         setHasBooked(true);
+
         setBooking(data.booking);
       } else if (data.availableSlots.length === 0) {
         setError("The slots are not available at this time.")
       } else {
         setHasBooked(false);
-        setSlots(data.availableSlots);
+        const now = new Date();
+        const futureSlots = data.availableSlots.filter(slot => {
+          const slotDate = new Date(slot.slot_date);
+          const [startHour, startMinute] = slot.start_time.split(':');
+          slotDate.setHours(startHour, startMinute, 0, 0);
+          return slotDate >= now;
+        });
+        setSlots(futureSlots);
+        if (futureSlots.length === 0) {
+          setError("All available slots have passed.");
+        }
       }
     } catch (err) {
       console.log(err)
@@ -141,6 +153,8 @@ export default function CandidateDashboard() {
 
               <div className="slot-grid">
                 {slots.map((slot) => (
+
+
                   <div key={slot.id} className="slot-card slot-card-available group">
                     <div className="slot-info-group">
                       <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">

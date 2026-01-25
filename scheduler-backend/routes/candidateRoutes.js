@@ -7,5 +7,7 @@ const authMiddleware = require("../middleware/authMiddleware")
 
 router.post("/slot-booking",authMiddleware,candidateController.bookSlot);
 router.get("/dashboard",authMiddleware,candidateController.getCandidateDashboard);
+router.get("/interview",authMiddleware,candidateController.getCandidateInterviewDetails);
+
 
 module.exports = router;

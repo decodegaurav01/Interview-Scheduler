@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+.activity-page-wrapper {
+  /* Dark Page Background */
+  @apply min-h-screen bg-slate-950;
+}
+
+.activity-container {
+  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.activity-header {
+  @apply mb-8;
+}
+
+.activity-title {
+  /* White Title */
+  @apply text-3xl font-bold text-white tracking-tight;
+}
+
+/* Table Card Section */
+.activity-card {
+  /* Dark Card: Slate-900 with subtle border */
+  @apply bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden;
+}
+
+.activity-table-wrapper {
+  @apply overflow-x-auto;
+}
+
+.activity-table {
+  @apply w-full text-sm text-left border-collapse;
+}
+
+.activity-thead {
+  /* Header: Slate-950 (darker than card) */
+  @apply bg-slate-950 text-slate-400 font-semibold border-b border-slate-800;
+}
+
+.activity-th {
+  @apply px-6 py-4 uppercase tracking-wider text-[11px];
+}
+
+.activity-tr {
+  /* Row: Dark borders and hover effect */
+  @apply border-b border-slate-800 hover:bg-slate-800/50 transition-colors duration-150;
+}
+
+.activity-td {
+  /* Cell Text: Light Slate */
+  @apply px-6 py-4 text-slate-300;
+}
+
+/* Action Badges */
+.action-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-tighter;
+}
+
+/* Dark Mode Badges: Transparent backgrounds + Lighter Text + Subtle Border */
+.action-create { 
+  @apply bg-emerald-500/10 text-emerald-400 border border-emerald-500/20; 
+}
+.action-delete { 
+  @apply bg-rose-500/10 text-rose-400 border border-rose-500/20; 
+}
+.action-update { 
+  @apply bg-amber-500/10 text-amber-400 border border-amber-500/20; 
+}
+.action-default { 
+  @apply bg-slate-800 text-slate-400 border border-slate-700; 
+}
+
+/* Status States */
+.state-box {
+  @apply p-20 text-center flex flex-col items-center justify-center;
+}
+
+.spinner-activity {
+  /* Dark Spinner: Slate-800 track */
+  @apply w-8 h-8 border-2 border-slate-800 border-t-indigo-500 rounded-full animate-spin mb-4;
+}

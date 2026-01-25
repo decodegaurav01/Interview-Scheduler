@@ -4,69 +4,69 @@ import { config } from "../config";
 
 // Add Email To Whitelist
 export async function addWhitelistEmail(email) {
-    try {
-        const token = localStorage.getItem("token");
+  try {
+    const token = sessionStorage.getItem("token");
 
-        const url = `${config.serverUrl}/admin/add-whitelist`;
+    const url = `${config.serverUrl}/admin/add-whitelist`;
 
-        const response = await axios.post(
-            url,
-            { email },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+    const response = await axios.post(
+      url,
+      { email },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-        return response.data;
+    return response.data;
 
-    } catch (e) {
-        console.error("Error from addWhitelistEmail axios:", e);
-        throw e;
-    }
+  } catch (e) {
+    console.error("Error from addWhitelistEmail axios:", e);
+    throw e;
+  }
 }
 
 // Get Whitelisted Emails
 export async function getWhitelistedEmails() {
-    try {
-        const token = localStorage.getItem("token");
+  try {
+    const token = sessionStorage.getItem("token");
 
-        const url = `${config.serverUrl}/admin/whitelisted-email`;
+    const url = `${config.serverUrl}/admin/whitelisted-email`;
 
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-        return response.data;
+    return response.data;
 
-    } catch (e) {
-        console.error("Error from getWhitelistedEmails axios:", e);
-        throw e;
-    }
+  } catch (e) {
+    console.error("Error from getWhitelistedEmails axios:", e);
+    throw e;
+  }
 }
 
 // Delete Whitelisted Email
 export async function deleteWhitelistedEmail(id) {
-    try {
-        const token = localStorage.getItem("token");
+  try {
+    const token = sessionStorage.getItem("token");
 
-        const url = `${config.serverUrl}/admin/delete-whitelisted-email/${id}`;
+    const url = `${config.serverUrl}/admin/delete-whitelisted-email/${id}`;
 
-        const response = await axios.delete(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+    const response = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-        return response.data;
+    return response.data;
 
-    } catch (e) {
-        console.error("Error from deleteWhitelistedEmail axios:", e);
-        throw e;
-    }
+  } catch (e) {
+    console.error("Error from deleteWhitelistedEmail axios:", e);
+    throw e;
+  }
 }
 
 
@@ -75,7 +75,7 @@ export async function deleteWhitelistedEmail(id) {
 // Get All Slots
 export async function getAllSlots() {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     const response = await axios.get(
       `${config.serverUrl}/admin/available-slots`,
@@ -99,7 +99,7 @@ export async function getAllSlots() {
 
 export async function createSlot(slotData) {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     console.log(slotData)
 
@@ -125,7 +125,7 @@ export async function createSlot(slotData) {
 
 export async function deleteSlot(slotId) {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     const response = await axios.delete(
       `${config.serverUrl}/admin/delete-slot/${slotId}`,
@@ -146,9 +146,8 @@ export async function deleteSlot(slotId) {
 
 //  Update Slot Status
 
-// services/adminService.js
 export async function updateSlotStatus(slotId, isActive) {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const response = await axios.patch(
     `${config.serverUrl}/admin/slots/${slotId}/status`,
@@ -169,7 +168,7 @@ export async function updateSlotStatus(slotId, isActive) {
 
 export async function getAllInterviewBookings() {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     const response = await axios.get(
       `${config.serverUrl}/admin/interview-bookings`,
@@ -180,7 +179,7 @@ export async function getAllInterviewBookings() {
       }
     );
 
-    return response.data; 
+    return response.data;
 
   } catch (error) {
     console.error("Error fetching interview bookings:", error);
@@ -189,7 +188,7 @@ export async function getAllInterviewBookings() {
 }
 
 export async function cancelBooking(bookingId) {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const response = await axios.delete(
     `${config.serverUrl}/admin/bookings/${bookingId}`,
@@ -200,5 +199,82 @@ export async function cancelBooking(bookingId) {
     }
   );
 
+  return response.data;
+}
+
+export async function getDashboardMetrics() {
+  const token = sessionStorage.getItem("token");
+
+  const response = await axios.get(
+    `${config.serverUrl}/admin/dashboard-metrics`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
+
+
+
+// Admin Logger
+export async function getAdminActivityLogs() {
+  const token = sessionStorage.getItem("token");
+
+  const response = await axios.get(
+    `${config.serverUrl}/admin/activity-logs`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
+
+
+
+//----Interviews---------------//
+
+export async function getAllInterviews() {
+  const token = sessionStorage.getItem("token");
+
+  const response = await axios.get(
+    `${config.serverUrl}/admin/interviews`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+}
+
+export async function sendReminder(bookingId) {
+  const token = sessionStorage.getItem("token");
+
+  return axios.post(
+    `${config.serverUrl}/admin/bookings/${bookingId}/reminder`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}
+
+export async function assignInterviewer(bookingId, data) {
+  const token = sessionStorage.getItem("token");
+  const response = await axios.put(
+    `${config.serverUrl}/admin/interviews/${bookingId}/assign`, 
+    data,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  console.log(response);
   return response.data;
 }

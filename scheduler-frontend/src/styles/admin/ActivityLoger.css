@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+.activity-page-wrapper {
+  @apply min-h-screen bg-slate-50;
+}
+
+.activity-container {
+  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.activity-header {
+  @apply mb-8;
+}
+
+.activity-title {
+  @apply text-3xl font-bold text-slate-900 tracking-tight;
+}
+
+/* Table Card Section */
+.activity-card {
+  @apply bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden;
+}
+
+.activity-table-wrapper {
+  @apply overflow-x-auto;
+}
+
+.activity-table {
+  @apply w-full text-sm text-left border-collapse;
+}
+
+.activity-thead {
+  @apply bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-100;
+}
+
+.activity-th {
+  @apply px-6 py-4 uppercase tracking-wider text-[11px];
+}
+
+.activity-tr {
+  @apply border-b border-slate-50 hover:bg-slate-50/50 transition-colors duration-150;
+}
+
+.activity-td {
+  @apply px-6 py-4 text-slate-600;
+}
+
+/* Action Badges */
+.action-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-tighter;
+}
+
+.action-create { @apply bg-emerald-100 text-emerald-700 border border-emerald-200; }
+.action-delete { @apply bg-rose-100 text-rose-700 border border-rose-200; }
+.action-update { @apply bg-amber-100 text-amber-700 border border-amber-200; }
+.action-default { @apply bg-slate-100 text-slate-600 border border-slate-200; }
+
+/* Status States */
+.state-box {
+  @apply p-20 text-center flex flex-col items-center justify-center;
+}
+
+.spinner-activity {
+  @apply w-8 h-8 border-2 border-slate-200 border-t-indigo-600 rounded-full animate-spin mb-4;
+}

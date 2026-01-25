@@ -1,5 +1,5 @@
 const pool = require("../config/db");
-const { sendBookingEmailToAdmin } = require("../utils/mailer");
+const { sendBookingEmailToAdmin, sendBookingEmailToCandidate } = require("../utils/mailer");
 
 
 
@@ -70,13 +70,21 @@ exports.bookSlot = (req, res) => {
             WHERE id = ?
           `;
 
-          pool.query(updateSlotSql, [slotId],async (err) => {
+          pool.query(updateSlotSql, [slotId], async (err) => {
             if (err) {
               return res.send("Failed to update slot")
             }
 
             try {
               await sendBookingEmailToAdmin({
+                candidateEmail,
+                slotDate: slot.slot_date,
+                startTime: slot.start_time,
+                endTime: slot.end_time,
+              });
+
+
+              await sendBookingEmailToCandidate({
                 candidateEmail,
                 slotDate: slot.slot_date,
                 startTime: slot.start_time,
@@ -99,7 +107,6 @@ exports.bookSlot = (req, res) => {
 exports.getCandidateDashboard = (req, res) => {
   const whitelistedEmailId = req.whitelistedEmailId;
 
-  // Check if candidate already booked
   const bookingSql = `
     SELECT
       ib.id AS booking_id,
@@ -125,7 +132,7 @@ exports.getCandidateDashboard = (req, res) => {
       });
     }
 
-    // No booking → fetch available slots
+  
     const slotsSql = `
       SELECT
         id,
@@ -148,6 +155,51 @@ exports.getCandidateDashboard = (req, res) => {
         hasBooked: false,
         availableSlots: slots,
       });
+    });
+  });
+};
+
+exports.getCandidateInterviewDetails = (req, res) => {
+  const whitelistedEmailId = req.whitelistedEmailId;
+
+  if (!whitelistedEmailId) {
+    return res.status(401).json({
+      message: "Unauthorized candidate",
+    });
+  }
+
+  const sql = `
+    SELECT
+      s.slot_date,
+      s.start_time,
+      s.end_time,
+      ib.meeting_link,
+      ib.interviewer_name,
+      ib.interviewer_email,
+      ib.interviewer_role,
+      ib.admin_note
+    FROM interview_bookings ib
+    JOIN interview_slots s ON ib.slot_id = s.id
+    WHERE ib.whitelisted_email_id = ?
+    LIMIT 1
+  `;
+
+  pool.query(sql, [whitelistedEmailId], (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        message: "Failed to fetch interview details",
+      });
+    }
+
+    if (rows.length === 0) {
+      return res.status(200).json({
+        hasInterview: false,
+      });
+    }
+
+    return res.status(200).json({
+      hasInterview: true,
+      interview: rows[0],
     });
   });
 };

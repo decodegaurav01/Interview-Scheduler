@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+.booking-page {
+  /* Dark Page Background */
+  @apply min-h-screen bg-slate-950;
+}
+
+.booking-container {
+  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.booking-header {
+  @apply mb-8;
+}
+
+.booking-title {
+  /* White Title */
+  @apply text-4xl font-bold text-white mb-2;
+}
+
+.booking-subtitle {
+  @apply text-slate-400;
+}
+
+/* Slot Card Styles */
+.slot-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.slot-card {
+  /* Dark Card: Slate-900 with subtle border */
+  @apply bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm transition-all duration-200;
+}
+
+.slot-card-available {
+  /* Hover: Blue Border Glow */
+  @apply hover:border-blue-500 hover:shadow-lg hover:shadow-blue-900/10;
+}
+
+.slot-card-booked {
+  /* Booked: Darker (Slate-950) + Opacity */
+  @apply opacity-60 bg-slate-950 grayscale-[0.5] border-slate-800;
+}
+
+/* Icon & Content Groups */
+.slot-info-group {
+  @apply flex items-center gap-3 mb-4;
+}
+
+.slot-icon-blue {
+  /* Lighter Blue for Dark Mode */
+  @apply w-5 h-5 text-blue-400;
+}
+
+.slot-icon-muted {
+  @apply w-5 h-5 text-slate-500;
+}
+
+.slot-label {
+  @apply text-xs font-bold uppercase tracking-wider text-slate-500;
+}
+
+.slot-value {
+  /* Value: White/Light Gray */
+  @apply text-slate-200 font-semibold;
+}
+
+/* Booking Action Button */
+.btn-book {
+  /* Primary Button: Blue 600 */
+  @apply w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold 
+         hover:bg-blue-500 active:scale-[0.98] transition-all 
+         disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600;
+}
+
+.btn-booked-status {
+  /* Disabled Button: Slate-800 bg */
+  @apply w-full bg-slate-800 text-slate-500 py-2.5 rounded-lg font-semibold cursor-not-allowed;
+}
+
+/* Confirmation Banner */
+.booking-confirmation {
+  /* Banner: Dark Blue Background */
+  @apply mb-12 p-8 bg-blue-600 rounded-2xl shadow-xl shadow-blue-900/40 text-white relative overflow-hidden;
+}
+
+.booking-confirmation::before {
+  content: "";
+  @apply absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl;
+}
+
+.confirmation-card-body {
+  @apply relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6;
+}
+
+.status-indicator {
+  @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest;
+}
+
+.status-online {
+  /* Status: Transparent Green */
+  @apply bg-emerald-400/20 text-emerald-300 border border-emerald-400/30;
+}

@@ -8,6 +8,9 @@ import Slot from "../pages/admin/Slots";
 import CandidateDashboard from "../pages/candidate/CandidateDashboard";
 import CandidateLogin from "../pages/auth/CandidateLogin";
 import UnauthorizedPage from "../pages/auth/UnauthorizedPage";
+import AdminActivity from "../pages/AdminActivity";
+import AdminInterviewBookings from "../pages/admin/AdminInterviewBookings";
+import CandidateInterviewDetails from "../pages/candidate/CandidateInterviewDetails";
 
 
 
@@ -40,13 +43,29 @@ export default function AppRoutes() {
                     <ProtectedRoute requiredRole={"ADMIN"}>
                         <Slot />
                     </ProtectedRoute>
-
                 } />
+
+                <Route path="/admin/activity" element={
+                    <ProtectedRoute requiredRole={"ADMIN"}>
+                        <AdminActivity />
+                    </ProtectedRoute>
+                }/>
+                <Route path="/admin/interviews" element={
+                    <ProtectedRoute requiredRole={"ADMIN"}>
+                        <AdminInterviewBookings />
+                    </ProtectedRoute>
+                }/>
 
                 {/* Candidate */}
                 <Route path="/candidate-dashboard" element={
                     <ProtectedRoute requiredRole={"CANDIDATE"}>
                         <CandidateDashboard />
+                    </ProtectedRoute>
+
+                } />
+                <Route path="/candidate/interview" element={
+                    <ProtectedRoute requiredRole={"CANDIDATE"}>
+                        <CandidateInterviewDetails />
                     </ProtectedRoute>
 
                 } />

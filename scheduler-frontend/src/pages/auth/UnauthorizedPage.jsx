@@ -12,10 +12,10 @@ export default function UnauthorizedPage() {
         </p>
         <button
           onClick={() => {
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminEmail');
-            localStorage.removeItem('candidateToken');
-            localStorage.removeItem('candidateEmail');
+            sessionStorage.removeItem('adminToken');
+            sessionStorage.removeItem('adminEmail');
+            sessionStorage.removeItem('candidateToken');
+            sessionStorage.removeItem('candidateEmail');
             navigate('/candidate/login');
           }}
           className="bg-primary text-primary-foreground px-6 py-2 rounded-md font-medium hover:bg-primary/90 transition-colors"

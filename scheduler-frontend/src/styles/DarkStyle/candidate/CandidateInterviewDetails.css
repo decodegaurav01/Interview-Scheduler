@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+
+.candidate-page {
+  /* Dark Page Background */
+  @apply min-h-screen bg-slate-950 pt-10 px-4 sm:px-6 lg:px-8 font-sans pb-10;
+}
+
+.candidate-page-container {
+  @apply max-w-2xl mx-auto px-4;
+}
+
+.candidate-interview-card {
+  /* Dark Card: Slate-900 with subtle border */
+  @apply bg-slate-900 rounded-2xl border border-slate-800 shadow-sm p-8;
+}
+
+.card-title {
+  /* Dark Title: White */
+  @apply text-2xl font-bold text-white mb-1;
+}
+
+.relative-time {
+  @apply text-slate-400 font-medium;
+}
+
+.info-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-8;
+}
+
+.info-block {
+  @apply flex items-start gap-4;
+}
+
+.icon-square {
+  /* Dark Icon Box: Transparent Blue */
+  @apply w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center;
+}
+
+.icon-svg {
+  @apply w-6 h-6;
+}
+
+.block-content {
+  @apply flex flex-col pt-0.5;
+}
+
+.block-label {
+  @apply text-xs font-bold text-slate-500 uppercase tracking-wider mb-1;
+}
+
+.block-value {
+  /* Value: White/Light Slate */
+  @apply text-lg font-bold text-slate-100 leading-tight;
+}
+
+.block-subtext {
+  @apply text-sm text-slate-400 font-medium mt-1;
+}
+
+.meeting-link-card {
+  /* Meeting Link: Dark Blue Tint */
+  @apply bg-blue-500/10 rounded-xl p-4 flex items-center gap-4 transition-colors hover:bg-blue-500/20 cursor-pointer w-full;
+}
+
+.meeting-link-text {
+  @apply text-blue-400 font-bold text-lg;
+}

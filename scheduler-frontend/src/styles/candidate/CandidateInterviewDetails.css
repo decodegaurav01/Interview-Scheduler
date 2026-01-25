@@ -1,0 +1,68 @@
+
+@import 'tailwindcss';
+
+
+
+  .candidate-page {
+    @apply min-h-screen  from-white to-slate-50 pt-10 px-4 sm:px-6 lg:px-8 font-sans pb-10;
+  }
+
+  .candidate-page-container {
+    @apply  max-w-2xl mx-auto px-4;
+  
+  }
+
+ 
+  .candidate-interview-card {
+    @apply bg-white rounded-2xl border border-gray-200 shadow-sm p-8;
+  }
+
+ 
+
+  .card-title {
+    @apply text-2xl font-bold text-gray-900 mb-1;
+  }
+
+  .relative-time {
+    @apply text-gray-500 font-medium;
+  }
+
+  .info-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-8;
+  }
+
+  .info-block {
+    @apply flex items-start gap-4;
+  }
+
+  .icon-square {
+    @apply  w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center;
+  }
+  
+  .icon-svg {
+    @apply w-6 h-6;
+  }
+
+  .block-content {
+    @apply flex flex-col pt-0.5;
+  }
+
+  .block-label {
+    @apply text-xs font-bold text-gray-400 uppercase tracking-wider mb-1;
+  }
+
+  .block-value {
+    @apply text-lg font-bold text-gray-900 leading-tight;
+  }
+
+  .block-subtext {
+    @apply text-sm text-gray-500 font-medium mt-1;
+  }
+
+  .meeting-link-card {
+    @apply bg-blue-50 rounded-xl p-4 flex items-center gap-4 transition-colors hover:bg-blue-100 cursor-pointer w-full;
+  }
+
+  .meeting-link-text {
+    @apply text-blue-700 font-bold text-lg;
+  }

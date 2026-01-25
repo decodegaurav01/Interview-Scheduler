@@ -1,0 +1,112 @@
+@import 'tailwindcss';
+
+.dashboard-overview-wrapper {
+  /* Dark Page Background */
+  @apply min-h-screen bg-slate-950 p-6 md:p-8;
+}
+
+.dashboard-overview-container {
+  @apply max-w-7xl mx-auto space-y-8;
+}
+
+/* Header Section */
+.overview-header {
+  @apply flex flex-col md:flex-row md:items-center justify-between gap-4;
+}
+
+.overview-title {
+  /* Dark Title: White */
+  @apply text-2xl font-bold text-white tracking-tight;
+}
+
+/* Table Card Section */
+.overview-card {
+  /* Dark Card: Slate-900 with subtle border */
+  @apply bg-slate-900 rounded-xl border border-slate-800 shadow-sm overflow-hidden;
+}
+
+.overview-card-header {
+  @apply p-6 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4;
+}
+
+.search-container {
+  @apply relative w-full md:w-64;
+}
+
+.dashboard-search-input {
+  /* Dark Input: Slate-950 (Darker than card) */
+  @apply w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white
+         placeholder:text-slate-500
+         focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all;
+}
+
+/* Table Styles */
+.overview-table-wrapper {
+  @apply overflow-x-auto;
+}
+
+.overview-table {
+  @apply w-full text-sm text-left;
+}
+
+.overview-thead {
+  /* Table Head: Darker Slate-950 */
+  @apply bg-slate-950 text-slate-400 font-medium border-b border-slate-800;
+}
+
+.overview-tr {
+  /* Row Hover: Subtle lightening */
+  @apply border-b border-slate-800 last:border-0 hover:bg-slate-800/50 transition-colors;
+}
+
+.overview-td {
+  @apply px-6 py-4 text-slate-300;
+}
+
+/* Status Badges */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-scheduled {
+  /* Transparent Emerald for Dark Mode */
+  @apply bg-emerald-500/10 text-emerald-400 ring-1 ring-inset ring-emerald-500/20;
+}
+
+.badge-completed {
+  /* Slate-800 for Completed */
+  @apply bg-slate-800 text-slate-400;
+}
+
+/* Stats Section */
+.stats-container {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+/* Dashboard Grid - Mixed CSS/Tailwind */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.metric-card {
+  /* Converted raw CSS to Dark Theme Hex codes */
+  background: #0f172a; /* slate-900 */
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #1e293b; /* slate-800 */
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2); /* Darker shadow */
+}
+
+.metric-title {
+  font-size: 14px;
+  color: #94a3b8; /* slate-400 */
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 8px;
+  color: #f8fafc; /* slate-50 (White-ish) */
+}

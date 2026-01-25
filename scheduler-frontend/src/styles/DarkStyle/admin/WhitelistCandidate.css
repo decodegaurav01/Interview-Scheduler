@@ -1,0 +1,143 @@
+@import 'tailwindcss';
+
+.whitelist-page {
+  /* Dark Page Background */
+  @apply min-h-screen bg-slate-950;
+}
+
+.whitelist-container {
+  @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.whitelist-header {
+  @apply mb-8;
+}
+
+.whitelist-title {
+  /* Dark Mode: White text */
+  @apply text-4xl font-bold text-white mb-2;
+}
+
+.whitelist-subtitle {
+  @apply text-slate-400;
+}
+
+/* Input Card Section */
+.whitelist-card {
+  /* Dark Card: Slate-900 with subtle border */
+  @apply bg-slate-900 border border-slate-800 rounded-xl shadow-sm p-6 mb-8;
+}
+
+.card-heading {
+  @apply text-lg font-semibold text-slate-100 mb-4;
+}
+
+/* Form Styles */
+.whitelist-form {
+  @apply flex flex-col sm:flex-row gap-3;
+}
+
+.whitelist-input {
+  /* Dark Input: Slate-950 (recessed look) */
+  @apply flex-1 px-4 py-2.5 border border-slate-700 rounded-lg bg-slate-950 text-white 
+         placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 
+         focus:border-indigo-500 transition-all;
+}
+
+.btn-add-email {
+  /* Primary Button: Indigo-600 for contrast */
+  @apply flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-2.5 
+         rounded-lg font-medium hover:bg-indigo-500 active:scale-[0.98] 
+         disabled:opacity-50 transition-all shadow-lg shadow-indigo-900/20;
+}
+
+/* List Table Section */
+.list-card {
+  @apply bg-slate-900 border border-slate-800 rounded-xl shadow-sm overflow-hidden;
+}
+
+.list-header {
+  /* List Header: Darker Slate-950 */
+  @apply px-6 py-4 border-b border-slate-800 bg-slate-950/50;
+}
+
+.email-item {
+  /* List Item: Dark borders and hover states */
+  @apply px-6 py-4 flex items-center justify-between hover:bg-slate-800/50 transition-colors border-b border-slate-800 last:border-0;
+}
+
+.btn-delete-email {
+  /* Delete Icon: Transparent Red Hover */
+  @apply text-slate-500 hover:text-rose-400 transition-colors p-2 rounded-lg hover:bg-rose-900/20;
+}
+
+/* Status Styles */
+
+.alert-error {
+  /* Dark Alert: Transparent Red */
+  @apply mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400;
+}
+
+.alert-success {
+  /* Dark Alert: Transparent Green */
+  @apply mb-4 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-400;
+}
+
+.pop-card {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+}
+
+.pop-overlay {
+  /* Dark Overlay: Darker fade */
+  @apply absolute inset-0 bg-black/60 backdrop-blur-sm;
+}
+
+.pop-content {
+  /* Modal Content: Dark bg */
+  @apply relative z-10 w-full max-w-md bg-slate-900 rounded-2xl shadow-2xl shadow-black/50 p-6 
+         border border-slate-800;
+}
+
+.pop-title {
+  @apply text-xl font-bold text-white mb-2 flex items-center gap-2;
+}
+
+.pop-title-2 {
+  @apply text-slate-400 mb-6 leading-relaxed;
+}
+
+.pop-warning {
+  @apply  mt-2 text-rose-400 font-bold text-sm;
+}
+
+.pop-actions {
+  @apply flex justify-end gap-3;
+}
+
+.btn-cancel {
+  /* Cancel Button: Slate-800 bg */
+  @apply px-5 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold
+         hover:bg-slate-700 active:scale-95 transition-all duration-200;
+}
+
+.btn-confirm-delete {
+  /* Confirm Delete: Rose-600 */
+  @apply px-5 py-2 rounded-xl bg-rose-600 text-white font-semibold
+         hover:bg-rose-500 shadow-lg shadow-rose-900/30 active:scale-95 transition-all duration-200;
+}
+
+/* Animation remains the same */
+.alert-error, .alert-success {
+  animation: slideInAndFade 0.5s ease-out;
+}
+
+@keyframes slideInAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

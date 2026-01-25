@@ -3,6 +3,7 @@ import { LogOut, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/admin/Navbar.css'
+import { AuroraText } from './ui/AuroraText';
 
 
 export function Navbar({ role }) {
@@ -12,20 +13,24 @@ export function Navbar({ role }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('email');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('email');
     navigate('/admin-login');
   };
 
   const adminLinks = [
     { href: '/admin/dashboard', label: 'Dashboard' },
-    { href: '/admin/whitelist-candidate', label: 'Whitelist Cadidate' },
+    { href: '/admin/interviews', label: 'Interview Bookings' },
+    { href: '/admin/whitelist-candidate', label: 'Whitelist Candidate' },
     { href: '/admin/slots', label: 'Manage Slots' },
+    { href: '/admin/activity', label: 'Activity Logs' }
   ];
 
   const candidateLinks = [
-  
+    { href: '/candidate-dashboard', label: 'Dashboard' },
+    { href: '/candidate/interview', label: 'My Interview' }
+
   ];
 
   const links = role === 'admin' ? adminLinks : candidateLinks;
@@ -35,7 +40,7 @@ export function Navbar({ role }) {
       <div className="nav-wrapper">
         <div className="nav-content">
           <div className="nav-left">
-            <h1 className="nav-brand">Interview Scheduler</h1>
+            <AuroraText className="nav-brand">Interview Scheduler</AuroraText>
             <div className="nav-links-desktop ">
               {links.map((link) => (
                 <a
