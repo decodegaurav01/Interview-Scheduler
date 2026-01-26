@@ -1,6 +1,6 @@
 const pool = require("../config/db");
 const { logAdminActivity } = require("../utils/adminLogger");
-const { sendCancelEmailToCandidate, sendInterviewReminderEmail } = require("../utils/mailer");
+const { sendCancelEmailToCandidate, sendInterviewReminderEmail, sendInterviewScheduleToInterviewer } = require("../utils/mailer");
 
 
 //---- Dashboard ---------
@@ -227,8 +227,43 @@ exports.assignInterviewer = (req, res) => {
         });
       }
 
-      return res.status(200).json({
-        message: "Interviewer details assigned successfully",
+      const fetchSql = `
+        SELECT
+          we.email AS candidate_email,
+          s.slot_date,
+          s.start_time,
+          s.end_time
+        FROM interview_bookings ib
+        JOIN whitelisted_email we ON ib.whitelisted_email_id = we.id
+        JOIN interview_slots s ON ib.slot_id = s.id
+        WHERE ib.id = ?
+      `;
+
+      pool.query(fetchSql, [bookingId], async (err, rows) => {
+        if (err || rows.length === 0) {
+          return res.status(200).json({
+            message:
+              "Interviewer assigned (email not sent due to fetch error)",
+          });
+        }
+
+        const interview = rows[0];
+        try {
+          await sendInterviewScheduleToInterviewer({
+            interviewerEmail,
+            candidateEmail: interview.candidate_email,
+            slotDate: interview.slot_date,
+            startTime: interview.start_time,
+            endTime: interview.end_time,
+            meetingLink,
+          });
+        } catch (emailErr) {
+          console.error("Interview schedule email failed:", emailErr);
+        }
+
+        return res.status(200).json({
+          message: "Interviewer details assigned successfully",
+        });
       });
     }
   );
@@ -456,40 +491,73 @@ exports.createSlot = (req, res) => {
   const { slotDate, startTime, endTime } = req.body;
 
 
-  const checkSql = `
+  if (!slotDate || !startTime || !endTime) {
+    return res.status(400).json({
+      message: "All fields are required",
+    });
+  }
+
+  const conflictSql = `
+    SELECT id
+    FROM interview_slots
+    WHERE slot_date = ?
+      AND is_active = true
+      AND start_time < ?
+      AND end_time > ?
+    LIMIT 1
+  `;
+
+  pool.query(
+    conflictSql,
+    [slotDate, endTime, startTime],
+    (err, conflicts) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Database error while checking slot conflict",
+        });
+      }
+
+      if (conflicts.length > 0) {
+        return res.send({
+          error: "Slot time conflicts with an existing slot",
+        });
+      }
+
+
+      const checkSql = `
     SELECT id FROM interview_slots
     WHERE slot_date = ? AND start_time = ? AND end_time = ?
   `;
 
-  pool.query(
-    checkSql,
-    [slotDate, startTime, endTime],
-    (checkErr, rows) => {
-      if (checkErr) {
-        return res.send("Database error");
-      }
+      pool.query(
+        checkSql,
+        [slotDate, startTime, endTime],
+        (checkErr, rows) => {
+          if (checkErr) {
+            return res.send("Database error");
+          }
 
-      if (rows.length > 0) {
-        return res.send("Slot already exists")
-      }
+          if (rows.length > 0) {
+            return res.send("Slot already exists")
+          }
 
-      const insertSql = `
+          const insertSql = `
         INSERT INTO interview_slots
         (slot_date, start_time, end_time, created_by_admin_id)
         VALUES (?, ?, ?, ?)
       `;
 
-      pool.query(
-        insertSql,
-        [slotDate, startTime, endTime, req.adminId],
-        (err, result) => {
-          if (err) {
-            return res.send(err)
-          }
+          pool.query(
+            insertSql,
+            [slotDate, startTime, endTime, req.adminId],
+            (err, result) => {
+              if (err) {
+                return res.send(err)
+              }
 
-          return res.send(result)
-        }
-      );
+              return res.send(result)
+            });
+        })
     }
   );
 }

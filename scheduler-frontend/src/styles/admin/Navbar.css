@@ -14,11 +14,11 @@
 }
 
 .nav-left {
-  @apply flex items-center   gap-80;
+  @apply flex items-center   md:gap-10 lg:gap-60;
 }
 
 .nav-brand {
-  @apply text-2xl font-bold  text-blue-500 ;
+  @apply text-3xl font-bold ;
 }
 
 .nav-links-desktop {

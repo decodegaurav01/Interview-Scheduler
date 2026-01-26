@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navbar } from '../../components/Navbar';
 import { Calendar, Clock, Search, Trash2, Users, CalendarCheck, BookIcon, BookOpen, LayoutDashboard, CheckCircle, CalendarIcon, Lock } from 'lucide-react';
-import '../../styles/admin/AdminDashboard.css';
+import '../../styles/DarkStyle/admin/AdminDashboard.css';
 import { cancelBooking, getAllInterviewBookings, getDashboardMetrics } from '../../services/adminService';
 import { StatCard } from '../../components/StatCard';
 import StatusAlert from '../../components/StatusAlert';
@@ -222,7 +222,7 @@ export default function AdminDashboard() {
                                 {isPast ? 'Completed' : 'Scheduled'}
                               </span>
                             </td>
-                            <td className="overview-td text-slate-500">
+                            <td className="overview-td">
                               {new Date(booking.booked_at).toLocaleDateString()}
                             </td>
                             <td className="overview-td text-right">

@@ -1,8 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { getAdminActivityLogs } from "../services/adminService";
-import { Navbar } from "../components/Navbar";
-import "../styles/admin/ActivityLoger.css"
+import { getAdminActivityLogs } from "../../services/adminService";
+import { Navbar } from "../../components/Navbar";
+import "../../styles/DarkStyle/admin/ActivityLoger.css"
 
 import { ShieldCheck, History, User } from "lucide-react"; //
 
@@ -23,7 +23,6 @@ export default function AdminActivity() {
     }
   };
 
-  // Helper to style action badges based on keyword
   const getActionClass = (action) => {
     const act = action.toLowerCase();
     if (act.includes('create')) return 'action-create';

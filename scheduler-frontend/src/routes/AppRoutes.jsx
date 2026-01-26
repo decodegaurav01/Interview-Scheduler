@@ -8,9 +8,9 @@ import Slot from "../pages/admin/Slots";
 import CandidateDashboard from "../pages/candidate/CandidateDashboard";
 import CandidateLogin from "../pages/auth/CandidateLogin";
 import UnauthorizedPage from "../pages/auth/UnauthorizedPage";
-import AdminActivity from "../pages/AdminActivity";
 import AdminInterviewBookings from "../pages/admin/AdminInterviewBookings";
 import CandidateInterviewDetails from "../pages/candidate/CandidateInterviewDetails";
+import AdminActivity from "../pages/admin/AdminActivity";
 
 
 

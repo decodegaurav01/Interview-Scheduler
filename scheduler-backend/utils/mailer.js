@@ -250,3 +250,90 @@ exports.sendInterviewReminderEmail = async ({
     html,
   });
 };
+
+exports.sendInterviewScheduleToInterviewer = async ({
+  interviewerEmail,
+  candidateEmail,
+  slotDate,
+  startTime,
+  endTime,
+  meetingLink,
+}) => {
+  const subject = "Interview Assigned – Candidate Schedule";
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 0;">
+  
+  <div style="padding: 40px 20px;">
+    <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); overflow: hidden; border: 1px solid #e2e8f0;">
+      
+      <div style="height: 6px; background: linear-gradient(to right, #6366f1, #8b5cf6); width: 100%;"></div>
+
+      <div style="padding: 32px;">
+        
+        <h2 style="margin: 0 0 8px 0; font-size: 20px; color: #1e293b; font-weight: 700;">
+          New Interview Assigned
+        </h2>
+        <p style="margin: 0 0 24px 0; font-size: 14px; color: #64748b;">
+          You have been selected to conduct an interview.
+        </p>
+
+        <div style="background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+          <p style="margin: 0; font-size: 11px; text-transform: uppercase; font-weight: 700; color: #3b82f6; letter-spacing: 0.5px;">Candidate</p>
+          <p style="margin: 4px 0 0 0; font-size: 16px; font-weight: 600; color: #1e3a8a;">
+            ${candidateEmail}
+          </p>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td style="padding-bottom: 12px; vertical-align: top; width: 24px;">
+                <span style="font-size: 16px;">📅</span>
+              </td>
+              <td style="padding-bottom: 12px;">
+                <strong style="color: #334155; font-size: 14px;">Date:</strong> 
+                <span style="color: #475569; font-size: 14px;">${new Date(slotDate).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top; width: 24px;">
+                <span style="font-size: 16px;">⏰</span>
+              </td>
+              <td>
+                <strong style="color: #334155; font-size: 14px;">Time:</strong> 
+                <span style="color: #475569; font-size: 14px;">${startTime} – ${endTime}</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        ${
+          meetingLink
+            ? `<a href="${meetingLink}" style="display: block; width: 100%; background-color: #0f172a; color: #ffffff; text-align: center; padding: 14px 0; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; transition: background-color 0.2s;">
+                 Join Meeting Room
+               </a>`
+            : `<div style="text-align: center; padding: 12px; background-color: #f1f5f9; color: #94a3b8; border-radius: 6px; font-size: 13px;">Meeting link pending</div>`
+        }
+
+        <div style="margin-top: 24px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+          <p style="margin: 0; font-size: 12px; color: #94a3b8; text-align: center;">
+            GenkaiX Recruitment Team
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  await transporter.sendMail({
+    to: interviewerEmail,
+    subject,
+    html,
+  });
+};

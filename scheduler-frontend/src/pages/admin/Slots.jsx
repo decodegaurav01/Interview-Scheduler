@@ -79,10 +79,13 @@ export default function Slots() {
 
     try {
       const response = await createSlot(formData)
+      
       console.log(response)
 
-      if (response === 'Slot already exists')
-        setError('Slot already exists')
+      if (response.error)
+        setError(response.error)
+      else if (response.message)
+        setSuccess(response.message)
       else {
         setFormData({ slotDate: '', startTime: '', endTime: '' });
 
@@ -94,7 +97,7 @@ export default function Slots() {
       }
 
     } catch (err) {
-      setError(err ? err.message : 'Failed to create slot');
+      setError( err.message);
     } finally {
       setIsSaving(false);
     }
