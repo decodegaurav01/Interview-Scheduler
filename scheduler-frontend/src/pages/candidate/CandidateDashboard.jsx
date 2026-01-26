@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Calendar, Clock, Check, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
-import '../../styles/candidate/candidateDashboard.css'
+import '../../styles/candidate/CandidateDashboard.css'
 import { bookSlot, getCandidateDashboard } from '../../services/candidateService';
 import StatusAlert from '../../components/StatusAlert';
 
