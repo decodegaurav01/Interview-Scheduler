@@ -3,14 +3,13 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLogin from "../pages/auth/AdminLogin";
 import { ProtectedRoute } from "./ProctectedRoute";
 import AdminDashboard from "../pages/admin/AdminDashboard";
-import WhitelistCandidate from "../pages/admin/whitelistCandidate";
-import Slot from "../pages/admin/Slots";
 import CandidateDashboard from "../pages/candidate/CandidateDashboard";
 import CandidateLogin from "../pages/auth/CandidateLogin";
-import UnauthorizedPage from "../pages/auth/UnauthorizedPage";
 import AdminInterviewBookings from "../pages/admin/AdminInterviewBookings";
 import CandidateInterviewDetails from "../pages/candidate/CandidateInterviewDetails";
 import AdminActivity from "../pages/admin/AdminActivity";
+import Slots from "../pages/admin/Slots";
+import Whitelisted from "../pages/admin/Whitelisted";
 
 
 
@@ -23,7 +22,6 @@ export default function AppRoutes() {
                 <Route path="/" element={<AdminLogin />} />
                 <Route path="/admin-login" element={<AdminLogin />} />
                 <Route path="/candidate-login" element={<CandidateLogin />} />
-                <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
                 {/* Admin */}
                 <Route path="/admin/dashboard" element={
@@ -35,13 +33,13 @@ export default function AppRoutes() {
                 } />
                 <Route path="/admin/whitelist-candidate" element={
                     <ProtectedRoute requiredRole={"ADMIN"}>
-                        <WhitelistCandidate />
+                        <Whitelisted />
                     </ProtectedRoute>
 
                 } />
                 <Route path="/admin/slots" element={
                     <ProtectedRoute requiredRole={"ADMIN"}>
-                        <Slot />
+                        <Slots />
                     </ProtectedRoute>
                 } />
 

@@ -10,7 +10,7 @@ import DeleteModal from "../../components/DeleteModal";
 
 
 
-export default function WhitelistCandidate() {
+export default function Whitelisted() {
   const [emails, setEmails] = useState([]);
   const [newEmail, setNewEmail] = useState('');
 
@@ -205,3 +205,4 @@ export default function WhitelistCandidate() {
     </>
   );
 }
+ 
