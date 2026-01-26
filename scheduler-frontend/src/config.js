@@ -1,3 +1,3 @@
 export const config = {
-    serverUrl:'http://localhost:4000',
+    serverUrl:'https://interview-scheduler.up.railway.app',
 }

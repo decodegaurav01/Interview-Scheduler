@@ -10,12 +10,7 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0
 });
-// const pool = mysql.createPool({
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'manager',
-//     database: 'genkaix_task_2_interview_scheduler'
-// });
+
 
 pool.getConnection((err, connection) => {
     if (err) {
