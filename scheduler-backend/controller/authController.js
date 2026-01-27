@@ -8,6 +8,8 @@ const jwt = require("jsonwebtoken");
 exports.adminLogin = (req, res) => {
     const { email, password } = req.body;
 
+    const decodedPassword = Buffer.from(password, 'base64').toString('utf8');
+
     const sql = `SELECT * FROM admin WHERE email = ? AND is_active = true`;
 
     pool.query(sql, [email], async (error, data) => {
@@ -19,7 +21,7 @@ exports.adminLogin = (req, res) => {
         }
 
         const admin = data[0];
-        const isMatch = await bcrypt.compare(password, admin.password);
+        const isMatch = await bcrypt.compare(decodedPassword, admin.password);
 
         if (!isMatch) {
             return res.send(error);

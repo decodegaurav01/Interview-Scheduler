@@ -32,7 +32,8 @@ export default function AdminLogin() {
                 setError("Please enter password")
             else {
 
-                const res = await adminLogin(email, password);
+                 const encodedPassword = btoa(password)
+                const res = await adminLogin(email, encodedPassword);
 
                 if (res) {
 
