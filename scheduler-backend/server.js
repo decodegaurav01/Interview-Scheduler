@@ -1,4 +1,5 @@
 console.log("🚀 server.js loaded");
+console.log("backend booted")
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
