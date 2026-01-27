@@ -1,3 +1,4 @@
+console.log("🚀 server.js loaded");
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -29,6 +30,7 @@ app.use('/candidate',candidateRoutes);
 
 
 const PORT = process.env.PORT || 4000
+console.log("🚀 About to start Express server");
 
 app.listen(PORT, ()=>{
     console.log(`server running on port ${PORT}..........!`);
