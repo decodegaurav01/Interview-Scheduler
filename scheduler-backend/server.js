@@ -3,6 +3,7 @@ console.log("backend booted")
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const { transporter } = require("./utils/mailer");
 
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -23,6 +24,24 @@ app.get("/", (req,res)=>{
     message: "Server is running"
   })
 })
+
+
+
+app.get("/smtp-test", async (req, res) => {
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
+      subject: "SMTP Test",
+      text: "SMTP working",
+    });
+    res.send("SMTP OK");
+  } catch (err) {
+    console.error("SMTP ERROR:", err);
+    res.status(500).send(err.message);
+  }
+});
+
 
 app.use('/auth',authRoutes);
 app.use('/admin',adminRoutes);
