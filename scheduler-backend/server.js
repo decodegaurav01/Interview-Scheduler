@@ -9,13 +9,11 @@ const candidateRoutes = require('./routes/candidateRoutes');
 
 const app = express();
 
-app.use(cors());
 app.use(cors({
-  origin: [
-    "https://interview-scheduler-eosin.vercel.app"
-  ],
+  origin: "https://interview-scheduler-eosin.vercel.app",
   credentials: true,
 }));
+
 app.use(express.json());
 
 app.get("/", (req,res)=>{
@@ -31,7 +29,8 @@ app.use('/candidate',candidateRoutes);
 
 
 
-const PORT = process.env.PORT
-app.listen(PORT,'localhost', ()=>{
+const PORT = process.env.PORT || 4000
+
+app.listen(PORT, ()=>{
     console.log(`server running on port ${PORT}..........!`);
 })  
