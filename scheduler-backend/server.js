@@ -12,12 +12,18 @@ const app = express();
 app.use(cors());
 app.use(cors({
   origin: [
-    "http://localhost:5173",
     "https://interview-scheduler-eosin.vercel.app"
   ],
   credentials: true,
 }));
 app.use(express.json());
+
+app.get("/", (req,res)=>{
+  res.status(200).json({
+    status: "OK",
+    message: "Server is running"
+  })
+})
 
 app.use('/auth',authRoutes);
 app.use('/admin',adminRoutes);
