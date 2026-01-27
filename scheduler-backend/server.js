@@ -31,7 +31,7 @@ app.use('/candidate',candidateRoutes);
 
 
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT
 app.listen(PORT,'localhost', ()=>{
     console.log(`server running on port ${PORT}..........!`);
 })  
