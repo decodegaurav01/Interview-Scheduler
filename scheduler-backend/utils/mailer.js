@@ -21,7 +21,7 @@ transporter.verify((err, success) => {
   }
 });
 
-exports.sendBookingEmailToAdmin = async ({
+exports.sendBookingEmailToAdmin =  ({
   candidateEmail,
   slotDate,
   startTime,
@@ -88,7 +88,7 @@ exports.sendBookingEmailToAdmin = async ({
   return transporter.sendMail(mailOptions);
 };
 
-exports.sendBookingEmailToCandidate = async ({
+exports.sendBookingEmailToCandidate =  ({
   candidateEmail,
   slotDate,
   startTime,
@@ -135,7 +135,7 @@ exports.sendBookingEmailToCandidate = async ({
 };
 
 
-exports.sendCancelEmailToCandidate = async ({
+exports.sendCancelEmailToCandidate =  ({
   candidateEmail,
   slotDate,
   startTime,
@@ -171,7 +171,7 @@ exports.sendCancelEmailToCandidate = async ({
 };
 
 
-exports.sendInterviewReminderEmail = async ({
+exports.sendInterviewReminderEmail =  ({
   candidateEmail,
   slotDate,
   startTime,
@@ -254,7 +254,7 @@ exports.sendInterviewReminderEmail = async ({
 </html>
 `;
 
-  await transporter.sendMail({
+   transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: candidateEmail,
     subject,
@@ -262,7 +262,7 @@ exports.sendInterviewReminderEmail = async ({
   });
 };
 
-exports.sendInterviewScheduleToInterviewer = async ({
+exports.sendInterviewScheduleToInterviewer =  ({
   interviewerEmail,
   candidateEmail,
   slotDate,
@@ -342,7 +342,7 @@ exports.sendInterviewScheduleToInterviewer = async ({
 </html>
 `;
 
-  await transporter.sendMail({
+   transporter.sendMail({
     to: interviewerEmail,
     subject,
     html,

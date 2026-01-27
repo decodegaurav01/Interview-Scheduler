@@ -89,7 +89,7 @@ exports.cancelBooking = (req, res) => {
         WHERE id = ?
       `;
 
-      pool.query(updateSlotSql, [slotId], async (err) => {
+      pool.query(updateSlotSql, [slotId],  (err) => {
         if (err) {
           return res.status(500).json({
             message: "Failed to update slot status",
@@ -98,7 +98,7 @@ exports.cancelBooking = (req, res) => {
 
 
         try {
-          await sendCancelEmailToCandidate({
+           sendCancelEmailToCandidate({
             candidateEmail: booking.candidate_email,
             slotDate: booking.slot_date,
             startTime: booking.start_time,
@@ -239,7 +239,7 @@ exports.assignInterviewer = (req, res) => {
         WHERE ib.id = ?
       `;
 
-      pool.query(fetchSql, [bookingId], async (err, rows) => {
+      pool.query(fetchSql, [bookingId],  (err, rows) => {
         if (err || rows.length === 0) {
           return res.status(200).json({
             message:
@@ -249,7 +249,7 @@ exports.assignInterviewer = (req, res) => {
 
         const interview = rows[0];
         try {
-          await sendInterviewScheduleToInterviewer({
+           sendInterviewScheduleToInterviewer({
             interviewerEmail,
             candidateEmail: interview.candidate_email,
             slotDate: interview.slot_date,
@@ -296,7 +296,7 @@ exports.sendReminderToCandidate = (req, res) => {
     WHERE ib.id = ?
   `;
 
-  pool.query(sql, [bookingId], async (err, rows) => {
+  pool.query(sql, [bookingId],  (err, rows) => {
     if (err) {
       return res.status(500).json({
         message: "Database error while fetching booking",
@@ -312,7 +312,7 @@ exports.sendReminderToCandidate = (req, res) => {
     const booking = rows[0];
 
     try {
-      await sendInterviewReminderEmail({
+       sendInterviewReminderEmail({
         candidateEmail: booking.candidate_email,
         slotDate: booking.slot_date,
         startTime: booking.start_time,
@@ -425,7 +425,7 @@ exports.deleteWhitelistedEmail = (req, res) => {
         WHERE id = ?
       `;
 
-      pool.query(deleteEmailSql, [id], async (err) => {
+      pool.query(deleteEmailSql, [id],  (err) => {
         if (err) {
           return res.status(500).json({
             message: "Failed to delete whitelisted email",
@@ -434,7 +434,7 @@ exports.deleteWhitelistedEmail = (req, res) => {
 
         if (hasBooking) {
           try {
-            await sendCancelEmailToCandidate({
+             sendCancelEmailToCandidate({
               candidateEmail: booking.candidate_email,
               slotDate: booking.slot_date,
               startTime: booking.start_time,

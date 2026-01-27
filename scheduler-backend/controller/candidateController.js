@@ -70,13 +70,13 @@ exports.bookSlot = (req, res) => {
             WHERE id = ?
           `;
 
-          pool.query(updateSlotSql, [slotId], async (err) => {
+          pool.query(updateSlotSql, [slotId],  (err) => {
             if (err) {
               return res.send("Failed to update slot")
             }
 
             try {
-              await sendBookingEmailToAdmin({
+               sendBookingEmailToAdmin({
                 candidateEmail,
                 slotDate: slot.slot_date,
                 startTime: slot.start_time,
@@ -84,7 +84,7 @@ exports.bookSlot = (req, res) => {
               });
 
 
-              await sendBookingEmailToCandidate({
+               sendBookingEmailToCandidate({
                 candidateEmail,
                 slotDate: slot.slot_date,
                 startTime: slot.start_time,
