@@ -10,6 +10,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+transporter.verify((err, success) => {
+  if (err) {
+    console.error("❌ Email transporter error:", err.message);
+  } else {
+    console.log("✅ Email service ready",success);
+  }
+});
+
 exports.sendBookingEmailToAdmin = async ({
   candidateEmail,
   slotDate,
@@ -337,3 +345,6 @@ exports.sendInterviewScheduleToInterviewer = async ({
     html,
   });
 };
+
+
+module.exports = transporter;
