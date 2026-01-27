@@ -10,8 +10,7 @@ const candidateRoutes = require('./routes/candidateRoutes');
 const app = express();
 
 app.use(cors({
-  origin: "https://interview-scheduler-eosin.vercel.app",
-  credentials: true,
+  origin: "*"
 }));
 
 app.use(express.json());
